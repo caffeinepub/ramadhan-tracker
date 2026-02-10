@@ -1,0 +1,249 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 7,
+  "summary": "Mobile-first web app “Ramadhan Tracker” for personal worship tracking during Ramadhan, with admin-created accounts (no self-signup), user dashboard, daily tracking modules (puasa, tilawah, murojaah, tahfidz, sedekah subuh), rotating Islamic content slides managed by admin, downloadable progress reports (PDF/CSV), and a full admin panel for user/content management and statistics.",
+  "architectural_notes": [
+    "No public self-registration; all user accounts provisioned by admin.",
+    "Role-based access control (Admin vs User) with users restricted to their own data.",
+    "Store tracking data per user per date to support dashboard summaries, filtering, and reporting.",
+    "Separate API surfaces/permissions for admin operations vs user operations.",
+    "Default/configured Sedekah Subuh donation button should open: https://tribelio.page/site/donation/9U7UPN3Y (still admin-configurable).",
+    "Daily motivation slide content types include: tadabbur (Quran reflection), hadits, and Islamic quotes."
+  ],
+  "known_issues": [
+    "Daily motivation slides/carousel (Tadabbur, Hadith, Islamic Quote) feature is not appearing in the live app/UI despite being added."
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-implement-authentication-with-admin-created-user-accounts-only-no-public-self-registration-including-roles-admin-user-secure-session-management-and-route-page-access-control-so-users-can-only-access-their-own-dashboard-and-data",
+      "title": "Implement authentication with admin-created user accounts only (no public self-registration), including roles (Admin, User), secure session management, and route/page access control so users can only access their own dashboard and data.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-an-admin-panel-with-user-management-capabilities-create-user-accounts-edit-user-details-deactivate-reactivate-accounts-and-reset-user-passwords",
+      "title": "Build an Admin Panel with user management capabilities: create user accounts, edit user details, deactivate/reactivate accounts, and reset user passwords.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-the-user-dashboard-home-as-a-single-mobile-first-screen-that-shows-today-s-overview-fasting-status-tilawah-summary-surah-verse-range-murojaah-summary-surah-verse-range-tahfidz-summary-surah-verse-range-charity-at-dawn-sedekah-subuh-status-and-a-visual-daily-progress-bar",
+      "title": "Implement the User Dashboard (Home) as a single mobile-first screen that shows today’s overview: fasting status, tilawah summary (surah + verse range), murojaah summary (surah + verse range), tahfidz summary (surah + verse range), charity-at-dawn (Sedekah Subuh) status, and a visual daily progress bar.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-per-user-per-date-storage-and-retrieval-of-all-tracking-data-fasting-tilawah-murojaah-tahfidz-sedekah-with-the-ability-to-filter-view-by-date",
+      "title": "Implement per-user, per-date storage and retrieval of all tracking data (fasting, tilawah, murojaah, tahfidz, sedekah) with the ability to filter/view by date.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-the-fasting-tracking-module-a-simple-toggle-for-fasting-today-yes-no-plus-an-optional-note-saved-for-the-selected-date",
+      "title": "Create the Fasting tracking module: a simple toggle for ‘Fasting today’ (Yes/No) plus an optional note, saved for the selected date.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-the-tilawah-tracking-module-input-surah-name-and-verse-range-from-to-saved-for-the-selected-date",
+      "title": "Create the Tilawah tracking module: input surah name and verse range (from–to), saved for the selected date.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-the-murojaah-tracking-module-input-surah-name-and-verse-range-from-to-saved-for-the-selected-date",
+      "title": "Create the Murojaah tracking module: input surah name and verse range (from–to), saved for the selected date.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-the-tahfidz-tracking-module-input-surah-name-and-verse-range-from-to-saved-for-the-selected-date",
+      "title": "Create the Tahfidz tracking module: input surah name and verse range (from–to), saved for the selected date.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-the-sedekah-subuh-tracking-module-a-one-click-donate-now-button-that-marks-today-selected-date-as-completed-and-opens-an-admin-configurable-placeholder-payment-link",
+      "title": "Create the Sedekah Subuh tracking module: a one-click ‘Donate now’ button that marks today/selected date as completed, and opens an admin-configurable placeholder payment link.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-auto-rotating-daily-content-slide-section-on-the-dashboard-with-three-content-types-quran-reflection-verse-selected-hadith-and-short-islamic-motivation-slides-rotate-automatically-every-few-seconds-and-admin-can-create-update-these-slide-items",
+      "title": "Add an auto-rotating daily content slide section on the dashboard with three content types: Quran reflection verse, selected hadith, and short Islamic motivation; slides rotate automatically every few seconds, and Admin can create/update these slide items.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-progress-report-download-for-the-logged-in-user-as-a-csv-file-containing-day-by-day-recap-across-the-date-range-the-user-selects-at-minimum-fasting-status-tilawah-murojaah-tahfidz-sedekah",
+      "title": "Implement progress report download for the logged-in user as a CSV file containing day-by-day recap across the date range the user selects (at minimum: fasting status, tilawah, murojaah, tahfidz, sedekah).",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-admin-participation-statistics-a-simple-overview-showing-overall-user-participation-completion-rates-for-key-daily-items-over-a-selectable-date-range-aggregated-across-users",
+      "title": "Provide Admin participation statistics: a simple overview showing overall user participation/completion rates for key daily items over a selectable date range (aggregated across users).",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-cohesive-mobile-first-islamic-minimal-visual-theme-not-blue-purple-by-default-with-fast-one-click-interactions-and-add-an-optional-dark-mode-toggle-that-persists-per-device",
+      "title": "Implement a cohesive, mobile-first ‘Islamic minimal’ visual theme (not blue/purple by default) with fast one-click interactions, and add an optional dark mode toggle that persists per device.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-sedekah-subuh-donate-now-button-so-it-opens-the-donation-url-https-tribelio-page-site-donation-9u7upn3y-and-remove-any-hardcoded-placeholder-donation-link-so-the-opened-link-is-always-sourced-from-an-app-setting-admin-configurable-with-this-url-as-the-default-value",
+      "title": "Update the Sedekah Subuh ‘Donate Now’ button so it opens the donation URL https://tribelio.page/site/donation/9U7UPN3Y, and remove any hardcoded placeholder donation link so the opened link is always sourced from an app setting (admin-configurable) with this URL as the default value.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-dashboard-daily-content-carousel-includes-and-clearly-labels-three-slide-types-as-tadabbur-quran-reflection-hadith-and-islamic-quote-daily-motivation-and-ensure-admin-content-management-fields-map-to-these-three-slide-types",
+      "title": "Ensure the dashboard daily content carousel includes and clearly labels three slide types as: ‘Tadabbur’ (Quran reflection), ‘Hadith’, and ‘Islamic Quote’ (daily motivation), and ensure Admin content management fields map to these three slide types.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-make-the-dashboard-daily-content-carousel-render-a-visible-empty-state-when-no-daily-content-exists-instead-of-rendering-nothing",
+      "title": "Make the Dashboard daily content carousel render a visible empty state when no daily content exists, instead of rendering nothing.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-basic-diagnostics-for-the-daily-content-query-failure-path-so-the-ui-does-not-silently-hide-the-daily-content-section-when-the-fetch-fails-e-g-show-a-small-error-state-message-in-english",
+      "title": "Add basic diagnostics for the daily content query failure path so the UI does not silently hide the daily content section when the fetch fails (e.g., show a small error state message in English).",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Authentication & role-based user management: admin-created accounts only, secure sessions, admin can create/edit/deactivate users; users access only their own data",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "User dashboard (home) with daily overview: puasa status, tilawah/murojaah/tahfidz summaries, sedekah subuh status, daily progress bar",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Daily tracking module: Puasa (toggle yes/no + optional note) saved per date",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Daily tracking module: Tilawah (surah name, ayat from–to) auto-saved per date",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Daily tracking module: Murojaah (surah name, ayat from–to) saved per date",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Daily tracking module: Tahfidz (surah name, ayat from–to) saved per date",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Daily tracking module: Sedekah Subuh (one-click “Sedekah Sekarang” to mark today) with admin-configurable payment link placeholder",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Auto-rotating daily content slides on dashboard (ayat tadabbur, hadits, motivasi); admin can update content",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Download progress report per user (PDF or CSV) including daily recap of puasa, tilawah, murojaah, tahfidz, sedekah subuh",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Admin panel: create users, reset passwords, view overall participation statistics, manage slide content, manage sedekah link",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "UI/UX: mobile-first clean Islamic minimal style, fast one-click logging, optional dark mode, date filtering, optional Ramadhan calendar view",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Backend/data: per-user storage of all tracking data by date, clear DB structure, separate admin vs user APIs, production-ready MVP architecture",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Ensure clear separation between admin and user backend APIs and enforce authorization checks server-side for every admin-only operation and every per-user data operation.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Ensure the backend provides at least one DailyContent record so the Tadabbur/Hadith/Islamic Quote carousel has content by default on existing deployments (e.g., seed a default entry during upgrade if none exists).",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Ramadhan Tracker",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

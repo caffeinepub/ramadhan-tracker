@@ -1,0 +1,60 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-10T16:15:14.633Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 3,
+    "implemented": 2,
+    "items": [
+      {
+        "id": "REQ-17",
+        "summary": "Make the Dashboard daily content carousel render a visible empty state when no daily content exists, instead of rendering nothing.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/dashboard/DailyContentCarousel.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/dashboard/DailyContentCarousel.tsx"
+        ]
+      },
+      {
+        "id": "REQ-18",
+        "summary": "Ensure the backend provides at least one DailyContent record so the Tadabbur/Hadith/Islamic Quote carousel has content by default on existing deployments (e.g., seed a default entry during upgrade if none exists).",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-19",
+        "summary": "Add basic diagnostics for the daily content query failure path so the UI does not silently hide the daily content section when the fetch fails (e.g., show a small error state message in English).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useBackendQueries.ts",
+          "frontend/src/components/dashboard/DailyContentCarousel.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useBackendQueries.ts",
+          "frontend/src/components/dashboard/DailyContentCarousel.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/components/dashboard/DailyContentCarousel.tsx",
+    "frontend/src/hooks/useBackendQueries.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

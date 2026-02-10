@@ -1,0 +1,44 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-make-the-dashboard-daily-content-carousel-render-a-visible-empty-state-when-no-daily-content-exists-instead-of-rendering-nothing",
+      "featureTitle": "Make the Dashboard daily content carousel render a visible empty state when no daily content exists, instead of rendering nothing.",
+      "files": [
+        "frontend/src/components/dashboard/DailyContentCarousel.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-17"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-basic-diagnostics-for-the-daily-content-query-failure-path-so-the-ui-does-not-silently-hide-the-daily-content-section-when-the-fetch-fails-e-g-show-a-small-error-state-message-in-english",
+      "featureTitle": "Add basic diagnostics for the daily content query failure path so the UI does not silently hide the daily content section when the fetch fails (e.g., show a small error state message in English).",
+      "files": [
+        "frontend/src/components/dashboard/DailyContentCarousel.tsx",
+        "frontend/src/hooks/useBackendQueries.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-19"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

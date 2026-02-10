@@ -1,0 +1,42 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Show empty/error states for Dashboard Daily Content carousel",
+  "requirements": [
+    {
+      "id": "REQ-17",
+      "summary": "Render a visible Daily Content section with an English empty state when there is no daily content, instead of rendering nothing.",
+      "acceptanceCriteria": [
+        "When `getContents()` returns an empty array, the Dashboard still shows a Daily Content section (card) with an English empty-state message (e.g., 'No daily content yet. Ask an admin to add Tadabbur, Hadith, and Islamic Quote in the Admin Panel.').",
+        "When `getContents()` returns at least one content item, the carousel renders and auto-rotates through the three labeled slide types: 'Tadabbur', 'Hadith', and 'Islamic Quote'."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/dashboard/DailyContentCarousel.tsx",
+          "operation": "modify",
+          "description": "Update the DailyContentCarousel to always render a Daily Content Card: show an English empty-state message when `contents` is an empty array (instead of returning null), and keep the existing carousel rendering/auto-rotation behavior when content exists with labeled slides 'Tadabbur', 'Hadith', and 'Islamic Quote'. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "summary": "Add basic UI diagnostics so daily content fetch failures show an English error state and do not hide the Daily Content section.",
+      "acceptanceCriteria": [
+        "If the daily content query errors, the Dashboard shows an English error state message in the Daily Content section (instead of rendering nothing).",
+        "The rest of the Dashboard continues to render normally even if daily content loading fails."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useBackendQueries.ts",
+          "operation": "modify",
+          "description": "Adjust the `useGetContents` React Query configuration to support an explicit failure path suitable for UI diagnostics (e.g., disable automatic retries and ensure errors are surfaced to the component). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/dashboard/DailyContentCarousel.tsx",
+          "operation": "modify",
+          "description": "Handle the `useGetContents` error state by rendering the same Daily Content Card with a small English error message (and without breaking the rest of the Dashboard), rather than returning null. Verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
+}

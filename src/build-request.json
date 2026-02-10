@@ -1,0 +1,83 @@
+{
+  "kind": "build_request",
+  "title": "Fix missing Daily Content (Tadabbur/Hadith/Islamic Quote) slides on Dashboard",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-17",
+      "text": "Make the Dashboard daily content carousel render a visible empty state when no daily content exists, instead of rendering nothing.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "fitur tambahkan slide untuk tampilkan motivasi harian (tadabbur, hadits, qoute islami) belum muncul"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When `getContents()` returns an empty array, the Dashboard still shows a Daily Content section (card) with an English empty-state message (e.g., 'No daily content yet. Ask an admin to add Tadabbur, Hadith, and Islamic Quote in the Admin Panel.').",
+        "When `getContents()` returns at least one content item, the carousel renders and auto-rotates through the three labeled slide types: 'Tadabbur', 'Hadith', and 'Islamic Quote'."
+      ]
+    },
+    {
+      "id": "REQ-18",
+      "text": "Ensure the backend provides at least one DailyContent record so the Tadabbur/Hadith/Islamic Quote carousel has content by default on existing deployments (e.g., seed a default entry during upgrade if none exists).",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "fitur tambahkan slide untuk tampilkan motivasi harian (tadabbur, hadits, qoute islami) belum muncul"
+        ]
+      },
+      "acceptanceCriteria": [
+        "After upgrading an existing canister that has zero daily content items, `getContents()` returns at least one `DailyContent` item without requiring an admin to manually create it first.",
+        "Seeding logic does not overwrite existing admin-managed content if daily content items already exist.",
+        "Admin can still update/delete daily content via existing admin endpoints and the Dashboard reflects updates after refresh."
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "text": "Add basic diagnostics for the daily content query failure path so the UI does not silently hide the daily content section when the fetch fails (e.g., show a small error state message in English).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "fitur tambahkan slide untuk tampilkan motivasi harian (tadabbur, hadits, qoute islami) belum muncul"
+        ]
+      },
+      "acceptanceCriteria": [
+        "If the daily content query errors, the Dashboard shows an English error state message in the Daily Content section (instead of rendering nothing).",
+        "The rest of the Dashboard continues to render normally even if daily content loading fails."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not edit files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or any files in frontend/src/components/ui (compose them instead).",
+    "Backend must remain a single Motoko actor in backend/main.mo; add/adjust backend/migration.mo only if needed for upgrading existing state.",
+    "All user-facing text added/changed for this request must be in English."
+  ],
+  "nonGoals": [
+    "Adding new slide categories beyond Tadabbur, Hadith, and Islamic Quote.",
+    "Changing authentication, roles, or admin/user access rules.",
+    "Adding external services or databases for content management."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}
