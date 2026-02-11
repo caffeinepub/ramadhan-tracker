@@ -1,13 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Ensure daily progress entries persist reliably across app exit/refresh, and update the monthly statistics visualization to a line-only chart.
+**Goal:** Restore reliable admin bootstrapping and improve frontend handling so a user can gain and verify Admin access to reach `/admin` on production.
 
 **Planned changes:**
-- Fix daily tracking persistence so saved progress for the selected date is fetched from the backend and rendered correctly after refresh/tab close/reopen.
-- Prevent data loss on navigation/exit by handling in-flight saves (complete reliably or show save-in-progress / save-failed messaging).
-- Ensure partial updates for a given date preserve already-saved module fields and do not overwrite other modules’ values; handle saving when no existing record is present without runtime errors.
-- Replace the monthly progress bar visualization with an SVG-based line chart (no bars), keeping percentage Y-axis labels and day labels on the X-axis, including horizontal scrolling and correct empty-state behavior.
-- Update any newly added/modified loading/error/empty UI strings in touched areas to English (leave untouched strings as-is).
+- Fix backend admin-bootstrap detection so `promoteToAdmin` can correctly determine whether any Admin exists even when there are no `userTasks` entries yet.
+- Add a backend query method that returns whether the canister is in bootstrap mode (no Admin exists yet), consistent with the logic used by `promoteToAdmin`.
+- Update the Admin access-denied screen to show an English “Bootstrap Admin Access” action only when bootstrap mode is true; on click, call `promoteToAdmin` for the currently logged-in principal, show an English success toast, and refetch/refresh relevant queries so `/admin` becomes accessible without manual cache clearing.
+- Improve `/admin` gate error handling to show a clear English error state with a “Retry” action when admin/role checks fail, while keeping the existing loading behavior unchanged.
 
-**User-visible outcome:** Users can record daily progress and return later (or refresh) to see the same date’s saved values without re-entering them, and the monthly progress page shows a scrollable line chart of daily percentage progress with appropriate labels and unchanged empty-state behavior.
+**User-visible outcome:** On a fresh deployment, an authenticated user can bootstrap themselves to Admin (only when no Admin exists) and then access `/admin`; if admin checks fail due to errors, the UI shows a clear English error message with a retry option.

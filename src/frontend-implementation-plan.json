@@ -1,134 +1,48 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix daily tracking persistence across reload/exit and switch monthly stats to SVG line chart",
+  "title": "Restore admin bootstrap access and improve /admin gate UX",
   "requirements": [
     {
-      "id": "REQ-27",
-      "summary": "Ensure daily tracking changes persist reliably across refresh/reopen, preserve partial updates, and communicate save-in-progress/failure.",
+      "id": "REQ-35",
+      "summary": "Show a conditional 'Bootstrap Admin Access' action on the admin access-denied screen and call promoteToAdmin for the current principal when bootstrap mode is enabled.",
       "acceptanceCriteria": [
-        "Given a user updates any module and sees a success confirmation, when the user refreshes the page or closes and reopens the app, the same date’s data is fetched and rendered with the saved values.",
-        "Updates that are in-flight when the user leaves the page do not silently get lost: the UI either completes the save reliably or informs the user that saving is still in progress / failed (so they can retry).",
-        "No module overwrites other modules’ already-saved fields for the same date (partial updates must preserve existing fields).",
-        "No runtime errors occur when saving on a date that previously had no Task record."
+        "When bootstrap mode is true, the access-denied screen shows a button labeled in English (e.g., \"Bootstrap Admin Access\").",
+        "Clicking the button calls the existing promote mutation with the current principal and shows a success toast in English on success.",
+        "After success, the app re-checks admin status (React Query invalidation/refetch) and allows navigation to /admin without requiring manual cache clearing.",
+        "When bootstrap mode is false, the bootstrap button is not displayed."
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useBackendQueries.ts",
           "operation": "modify",
-          "description": "Update task mutation flow to support safe partial updates (merge with latest cached task for the selected date before saving) and expose mutation state that can be used for a global save-in-progress indicator. Ensure cache invalidation/refetch keeps the selected date’s task consistent after refresh/reopen."
+          "description": "Add a new React Query hook (e.g., useIsAdminBootstrapAvailable) that calls the backend capability isAdminBootstrapAvailable() and caches it under a stable query key; update the existing usePromoteToAdmin() onSuccess to also invalidate the bootstrap availability query key so the UI can immediately reflect that bootstrap mode is no longer available. Use the authorization component’s RBAC expectations (admin bootstrap + role checks) as the conceptual basis for when this UI should appear; verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/hooks/useTaskPersistence.ts",
-          "operation": "create",
-          "description": "Create a small frontend persistence helper hook to (1) track whether task saves are currently pending/failed for the selected date, and (2) register a beforeunload guard to warn when saves are in progress and provide an English message when a save failed and needs retry."
-        },
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
+          "path": "frontend/src/components/auth/AdminAccessDeniedScreen.tsx",
           "operation": "modify",
-          "description": "Persist the selectedDate across reload/reopen (e.g., localStorage) and restore it on mount so the same date is shown after refresh. Wire in the new persistence helper hook to display an English UI hint when saving is in progress or when the last save failed (retry guidance), and to enable the beforeunload warning while saving."
-        },
-        {
-          "path": "frontend/src/components/tracking/SholatModule.tsx",
-          "operation": "modify",
-          "description": "Switch module saves to the shared partial-update/merge approach (avoid overwriting other fields for the same date) and update any modified success/error text related to saving to English."
-        },
-        {
-          "path": "frontend/src/components/tracking/FastingModule.tsx",
-          "operation": "modify",
-          "description": "Switch module saves (toggle + note) to the shared partial-update/merge approach and update any modified save/loading/error strings to English."
-        },
-        {
-          "path": "frontend/src/components/tracking/TilawahModule.tsx",
-          "operation": "modify",
-          "description": "Switch module saves to the shared partial-update/merge approach and update any modified save/loading/error strings to English."
-        },
-        {
-          "path": "frontend/src/components/tracking/MurojaahModule.tsx",
-          "operation": "modify",
-          "description": "Switch module saves to the shared partial-update/merge approach and update any modified save/loading/error strings to English."
-        },
-        {
-          "path": "frontend/src/components/tracking/TahfidzModule.tsx",
-          "operation": "modify",
-          "description": "Switch module saves to the shared partial-update/merge approach and update any modified save/loading/error strings to English."
-        },
-        {
-          "path": "frontend/src/components/tracking/SedekahModule.tsx",
-          "operation": "modify",
-          "description": "Switch module save to the shared partial-update/merge approach (to preserve other fields) and update any modified error/loading/success strings to English."
+          "description": "Update the access-denied UI to (1) query bootstrap mode via the new hook and (2) render an English-only \"Bootstrap Admin Access\" button only when bootstrap mode is true; on click, call the existing promoteToAdmin mutation with the currently logged-in principal (from Internet Identity), show an English success toast on success, and rely on React Query invalidation/refetch to transition the /admin route from denied to allowed without manual cache clearing. Keep existing copy-to-clipboard behavior, but ensure any modified/new user-facing text is English. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
-      "id": "REQ-28",
-      "summary": "Replace the monthly progress bar chart with an SVG-based line-only chart while keeping labels and horizontal scrolling.",
+      "id": "REQ-36",
+      "summary": "Improve /admin gate error handling to show a clear English error state with a retry action when role/admin checks fail.",
       "acceptanceCriteria": [
-        "The monthly progress chart renders as a line chart (polyline/path) over the days of the selected month; no bar rectangles are rendered.",
-        "The chart still shows Y-axis percentage labels (0–100%) and day labels along the X-axis (or a readable subset if space is limited).",
-        "The chart remains horizontally scrollable for long months on mobile, consistent with the current UX.",
-        "Empty state behavior remains correct: when there is no data, the chart area does not render and the existing empty state is shown."
+        "If the admin-role check query errors, /admin shows an English error message that indicates the admin status could not be verified.",
+        "The error UI provides an English \"Retry\" action that re-triggers the relevant role/admin queries.",
+        "The existing loading state remains unchanged and continues to prevent false denials while checks are in progress."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/dashboard/MonthlyProgressChart.tsx",
+          "path": "frontend/src/hooks/useAuth.ts",
           "operation": "modify",
-          "description": "Replace the SVG bar rendering with a line-only visualization (polyline/path) plotted over days, keeping the existing scroll container, axes/gridlines, and Y-axis percentage labels. Ensure no <rect> bars are rendered and that X-axis day labels remain readable (optionally render a subset for tight layouts)."
+          "description": "Extend useAuth() to surface error state and retry/refetch controls for the underlying role/admin checks (e.g., expose adminCheckError/roleCheckError and a retry function that triggers refetch on the relevant queries), without changing the existing isLoading semantics (loading should still block denial while checks are in progress). Align with the authorization component’s RBAC query patterns and error-handling guidance; verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/pages/MonthlyProgressPage.tsx",
+          "path": "frontend/src/pages/admin/AdminGatePage.tsx",
           "operation": "modify",
-          "description": "Adjust any chart-related wiring needed after the chart implementation change (props/labels/layout) while preserving existing empty-state behavior (chart not rendered when no data) and maintaining horizontal scrolling UX."
-        }
-      ]
-    },
-    {
-      "id": "REQ-29",
-      "summary": "Ensure any new/modified loading, error, empty, and save-status UI strings introduced by the fixes are in English (without changing untouched strings).",
-      "acceptanceCriteria": [
-        "Any new or modified user-facing strings in the touched UI (e.g., save-in-progress / save-failed messaging related to persistence, and any chart-related labels if changed) are in English.",
-        "Existing strings that are not touched remain unchanged."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Update any newly introduced save-status messaging (e.g., saving-in-progress / save failed / retry guidance) to English, keeping other existing strings unchanged where possible."
-        },
-        {
-          "path": "frontend/src/components/tracking/SholatModule.tsx",
-          "operation": "modify",
-          "description": "Update any modified save confirmation/failure text to English (only where this requirement’s changes touch the strings)."
-        },
-        {
-          "path": "frontend/src/components/tracking/FastingModule.tsx",
-          "operation": "modify",
-          "description": "Update any modified save/loading/error strings (including note save states) to English."
-        },
-        {
-          "path": "frontend/src/components/tracking/TilawahModule.tsx",
-          "operation": "modify",
-          "description": "Update any modified save/loading/error strings to English."
-        },
-        {
-          "path": "frontend/src/components/tracking/MurojaahModule.tsx",
-          "operation": "modify",
-          "description": "Update any modified save/loading/error strings to English."
-        },
-        {
-          "path": "frontend/src/components/tracking/TahfidzModule.tsx",
-          "operation": "modify",
-          "description": "Update any modified save/loading/error strings to English."
-        },
-        {
-          "path": "frontend/src/components/tracking/SedekahModule.tsx",
-          "operation": "modify",
-          "description": "Update any modified save/loading/error strings to English (e.g., missing payment link, saving state, save failure)."
-        },
-        {
-          "path": "frontend/src/pages/MonthlyProgressPage.tsx",
-          "operation": "modify",
-          "description": "If loading/error/empty/chart labels are modified as part of the chart switch, ensure those modified user-facing strings are in English; leave unrelated existing strings unchanged."
+          "description": "Update the /admin gate to render a dedicated English error state when role/admin checks error (network/trap/other query error), including an English \"Retry\" action wired to the retry/refetch controls exposed by useAuth(). Preserve the current loading UI and behavior so users are not denied while checks are in flight. Verify the component's usage instructions before implementing."
         }
       ]
     }

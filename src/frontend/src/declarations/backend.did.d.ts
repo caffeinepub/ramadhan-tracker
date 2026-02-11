@@ -105,8 +105,11 @@ export interface _SERVICE {
       'sedekahDays' : bigint,
     }
   >,
+  'isAdminBootstrapAvailable' : ActorMethod<[], boolean>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
+  'promoteToAdmin' : ActorMethod<[Principal], undefined>,
   'reactivateUser' : ActorMethod<[Principal], undefined>,
+  'removeAdminRights' : ActorMethod<[Principal], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'setSedekahPaymentLink' : ActorMethod<[string], undefined>,
   'updateUserProfile' : ActorMethod<[Principal, UserProfile], undefined>,

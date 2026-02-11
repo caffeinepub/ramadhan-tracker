@@ -68,6 +68,38 @@ export function useIsCallerAdmin() {
   });
 }
 
+export function useIsAdminBootstrapAvailable() {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery({
+    queryKey: ['isAdminBootstrapAvailable'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.isAdminBootstrapAvailable();
+    },
+    enabled: !!actor && !actorFetching,
+    retry: false,
+  });
+}
+
+export function usePromoteToAdmin() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (target: Principal) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.promoteToAdmin(target);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['isCallerAdmin'] });
+      queryClient.invalidateQueries({ queryKey: ['callerUserRole'] });
+      queryClient.invalidateQueries({ queryKey: ['allUsers'] });
+      queryClient.invalidateQueries({ queryKey: ['isAdminBootstrapAvailable'] });
+    },
+  });
+}
+
 // Task Queries
 export function useGetTask(date: Date_) {
   const { actor, isFetching: actorFetching } = useActor();

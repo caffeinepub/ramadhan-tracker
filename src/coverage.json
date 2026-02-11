@@ -1,102 +1,71 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T00:24:21.005Z",
+  "generatedAt": "2026-02-11T03:24:09.463Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 3,
+    "total": 4,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-27",
-        "summary": "Fix daily tracking persistence so that after a user records any daily progress (sholat, fasting, tilawah, murojaah, tahfidz, sedekah) and then closes/exits the web app (tab close, refresh, reopen), the previously saved values are reliably loaded from the backend for the same selected date (no need to re-mark from scratch).",
+        "id": "REQ-33",
+        "summary": "Fix the backend admin-bootstrap detection so `promoteToAdmin` correctly determines whether any Admin already exists, even when there are no `userTasks` entries yet (preventing permanent lockout where no one can become Admin).",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-34",
+        "summary": "Add a backend query API that allows the frontend to safely determine whether the canister is in \"bootstrap mode\" (i.e., no Admin exists yet), so the UI can offer a first-admin recovery action only when appropriate.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-35",
+        "summary": "Update the Admin access-denied screen to include an English \"Bootstrap Admin Access\" action that is shown only when the backend reports bootstrap mode, and when clicked attempts to call `promoteToAdmin` for the currently logged-in principal.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/hooks/useBackendQueries.ts",
-          "frontend/src/hooks/useTaskPersistence.ts",
-          "frontend/src/pages/DashboardPage.tsx",
-          "frontend/src/components/tracking/SholatModule.tsx",
-          "frontend/src/components/tracking/FastingModule.tsx",
-          "frontend/src/components/tracking/TilawahModule.tsx",
-          "frontend/src/components/tracking/MurojaahModule.tsx",
-          "frontend/src/components/tracking/TahfidzModule.tsx",
-          "frontend/src/components/tracking/SedekahModule.tsx"
+          "frontend/src/components/auth/AdminAccessDeniedScreen.tsx"
         ],
         "matchedFiles": [
           "frontend/src/hooks/useBackendQueries.ts",
-          "frontend/src/pages/DashboardPage.tsx",
-          "frontend/src/components/tracking/SholatModule.tsx",
-          "frontend/src/components/tracking/FastingModule.tsx",
-          "frontend/src/components/tracking/TilawahModule.tsx",
-          "frontend/src/components/tracking/MurojaahModule.tsx",
-          "frontend/src/components/tracking/TahfidzModule.tsx",
-          "frontend/src/components/tracking/SedekahModule.tsx"
+          "frontend/src/components/auth/AdminAccessDeniedScreen.tsx"
         ]
       },
       {
-        "id": "REQ-28",
-        "summary": "Replace the monthly progress “bar” visualization with a line chart (SVG-based) so the monthly progress page shows a line-only chart for daily percentage progress instead of vertical bars.",
+        "id": "REQ-36",
+        "summary": "Improve the /admin gate error handling so that if role/admin checks fail (e.g., backend trap/network error), the page shows a clear English error state and a retry action rather than only generic messaging.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/dashboard/MonthlyProgressChart.tsx",
-          "frontend/src/pages/MonthlyProgressPage.tsx"
+          "frontend/src/hooks/useAuth.ts",
+          "frontend/src/pages/admin/AdminGatePage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/dashboard/MonthlyProgressChart.tsx",
-          "frontend/src/pages/MonthlyProgressPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-29",
-        "summary": "Update any affected loading/error/empty UI states introduced or modified by these changes to use English user-facing text in the modified components/pages.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx",
-          "frontend/src/components/tracking/SholatModule.tsx",
-          "frontend/src/components/tracking/FastingModule.tsx",
-          "frontend/src/components/tracking/TilawahModule.tsx",
-          "frontend/src/components/tracking/MurojaahModule.tsx",
-          "frontend/src/components/tracking/TahfidzModule.tsx",
-          "frontend/src/components/tracking/SedekahModule.tsx",
-          "frontend/src/pages/MonthlyProgressPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx",
-          "frontend/src/components/tracking/SholatModule.tsx",
-          "frontend/src/components/tracking/FastingModule.tsx",
-          "frontend/src/components/tracking/TilawahModule.tsx",
-          "frontend/src/components/tracking/MurojaahModule.tsx",
-          "frontend/src/components/tracking/TahfidzModule.tsx",
-          "frontend/src/components/tracking/SedekahModule.tsx",
-          "frontend/src/pages/MonthlyProgressPage.tsx"
+          "frontend/src/hooks/useAuth.ts",
+          "frontend/src/pages/admin/AdminGatePage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/dashboard/MonthlyProgressChart.tsx",
-    "frontend/src/components/tracking/FastingModule.tsx",
-    "frontend/src/components/tracking/MurojaahModule.tsx",
-    "frontend/src/components/tracking/SedekahModule.tsx",
-    "frontend/src/components/tracking/SholatModule.tsx",
-    "frontend/src/components/tracking/TahfidzModule.tsx",
-    "frontend/src/components/tracking/TilawahModule.tsx",
+    "frontend/src/components/auth/AdminAccessDeniedScreen.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useAuth.ts",
     "frontend/src/hooks/useBackendQueries.ts",
-    "frontend/src/pages/DashboardPage.tsx",
-    "frontend/src/pages/MonthlyProgressPage.tsx",
+    "frontend/src/pages/admin/AdminGatePage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

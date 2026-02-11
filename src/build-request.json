@@ -1,82 +1,94 @@
 {
   "kind": "build_request",
-  "title": "Fix daily progress persistence on app exit and switch statistics visualization to line chart",
+  "title": "Fix admin role bootstrap so the user can access /admin on production",
   "priority": "high",
   "requirements": [
     {
-      "id": "REQ-27",
-      "text": "Fix daily tracking persistence so that after a user records any daily progress (sholat, fasting, tilawah, murojaah, tahfidz, sedekah) and then closes/exits the web app (tab close, refresh, reopen), the previously saved values are reliably loaded from the backend for the same selected date (no need to re-mark from scratch).",
-      "target": "both",
+      "id": "REQ-33",
+      "text": "Fix the backend admin-bootstrap detection so `promoteToAdmin` correctly determines whether any Admin already exists, even when there are no `userTasks` entries yet (preventing permanent lockout where no one can become Admin).",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-5"
         ],
         "quotes": [
-          "progres harian ketika habis  keluar dari web app datanya tidak tersimpan, harus mengulang menandai dari  awal lagi"
+          "akses adminya masih belum saya dapat"
         ]
       },
       "acceptanceCriteria": [
-        "Given a user updates any module and sees a success confirmation, when the user refreshes the page or closes and reopens the app, the same date’s data is fetched and rendered with the saved values.",
-        "Updates that are in-flight when the user leaves the page do not silently get lost: the UI either completes the save reliably or informs the user that saving is still in progress / failed (so they can retry).",
-        "No module overwrites other modules’ already-saved fields for the same date (partial updates must preserve existing fields).",
-        "No runtime errors occur when saving on a date that previously had no Task record."
+        "On a fresh deployment with no users/tasks created, calling `promoteToAdmin(<principal>)` successfully grants the Admin role to the target principal.",
+        "On a deployment where an Admin role already exists, `promoteToAdmin` rejects non-admin callers with an English error message.",
+        "The check for \"any admin exists\" does not rely on `userTasks.keys()` as the only source of truth (so it works even when no tasks exist yet)."
       ]
     },
     {
-      "id": "REQ-28",
-      "text": "Replace the monthly progress “bar” visualization with a line chart (SVG-based) so the monthly progress page shows a line-only chart for daily percentage progress instead of vertical bars.",
-      "target": "frontend",
+      "id": "REQ-34",
+      "text": "Add a backend query API that allows the frontend to safely determine whether the canister is in \"bootstrap mode\" (i.e., no Admin exists yet), so the UI can offer a first-admin recovery action only when appropriate.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-5"
         ],
         "quotes": [
-          "dashboard statitistik nya jangan pakai balok tapi pakai chart garis saja"
+          "akses adminya masih belum saya dapat"
         ]
       },
       "acceptanceCriteria": [
-        "The monthly progress chart renders as a line chart (polyline/path) over the days of the selected month; no bar rectangles are rendered.",
-        "The chart still shows Y-axis percentage labels (0–100%) and day labels along the X-axis (or a readable subset if space is limited).",
-        "The chart remains horizontally scrollable for long months on mobile, consistent with the current UX.",
-        "Empty state behavior remains correct: when there is no data, the chart area does not render and the existing empty state is shown."
+        "A new query method is available that returns whether any Admin exists (or equivalently whether bootstrap mode is enabled).",
+        "The method is callable by authenticated users and does not expose sensitive data beyond the boolean/bootstrap status.",
+        "The returned value is consistent with the backend logic used by `promoteToAdmin`."
       ]
     },
     {
-      "id": "REQ-29",
-      "text": "Update any affected loading/error/empty UI states introduced or modified by these changes to use English user-facing text in the modified components/pages.",
+      "id": "REQ-35",
+      "text": "Update the Admin access-denied screen to include an English \"Bootstrap Admin Access\" action that is shown only when the backend reports bootstrap mode, and when clicked attempts to call `promoteToAdmin` for the currently logged-in principal.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-5"
+        ],
+        "quotes": [
+          "akses adminya masih belum saya dapat"
         ]
       },
       "acceptanceCriteria": [
-        "Any new or modified user-facing strings in the touched UI (e.g., save-in-progress / save-failed messaging related to persistence, and any chart-related labels if changed) are in English.",
-        "Existing strings that are not touched remain unchanged."
+        "When bootstrap mode is true, the access-denied screen shows a button labeled in English (e.g., \"Bootstrap Admin Access\").",
+        "Clicking the button calls the existing promote mutation with the current principal and shows a success toast in English on success.",
+        "After success, the app re-checks admin status (React Query invalidation/refetch) and allows navigation to /admin without requiring manual cache clearing.",
+        "When bootstrap mode is false, the bootstrap button is not displayed."
+      ]
+    },
+    {
+      "id": "REQ-36",
+      "text": "Improve the /admin gate error handling so that if role/admin checks fail (e.g., backend trap/network error), the page shows a clear English error state and a retry action rather than only generic messaging.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "akses adminya masih belum saya dapat"
+        ]
+      },
+      "acceptanceCriteria": [
+        "If the admin-role check query errors, /admin shows an English error message that indicates the admin status could not be verified.",
+        "The error UI provides an English \"Retry\" action that re-triggers the relevant role/admin queries.",
+        "The existing loading state remains unchanged and continues to prevent false denials while checks are in progress."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo; only add backend/migration.mo if a real state migration is required.",
-    "Do not edit frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui/*."
+    "Backend must remain a single Motoko actor in backend/main.mo (no additional services).",
+    "Do not edit any files under frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or anything in frontend/src/components/ui (compose instead).",
+    "Use English for any new or modified user-facing text touched by this change (toasts, buttons, error states)."
   ],
   "nonGoals": [
-    "Do not add new tracking categories beyond the existing modules (sholat, fasting, tilawah, murojaah, tahfidz, sedekah).",
-    "Do not redesign the entire dashboard UI; only change the requested chart type and the persistence bug.",
-    "Do not introduce external databases, third-party auth providers, or real-time/websocket features."
+    "Implementing third-party authentication providers beyond Internet Identity.",
+    "Adding new admin features unrelated to restoring admin access (e.g., new admin tabs or new data models).",
+    "Changing the existing dashboard feature set or tracking modules."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

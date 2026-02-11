@@ -2,17 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-fix-daily-tracking-persistence-so-that-after-a-user-records-any-daily-progress-sholat-fasting-tilawah-murojaah-tahfidz-sedekah-and-then-closes-exits-the-web-app-tab-close-refresh-reopen-the-previously-saved-values-are-reliably-loaded-from-the-backend-for-the-same-selected-date-no-need-to-re-mark-from-scratch",
-      "featureTitle": "Fix daily tracking persistence so that after a user records any daily progress (sholat, fasting, tilawah, murojaah, tahfidz, sedekah) and then closes/exits the web app (tab close, refresh, reopen), the previously saved values are reliably loaded from the backend for the same selected date (no need to re-mark from scratch).",
+      "featureId": "feature-update-the-admin-access-denied-screen-to-include-an-english-bootstrap-admin-access-action-that-is-shown-only-when-the-backend-reports-bootstrap-mode-and-when-clicked-attempts-to-call-promotetoadmin-for-the-currently-logged-in-principal",
+      "featureTitle": "Update the Admin access-denied screen to include an English \"Bootstrap Admin Access\" action that is shown only when the backend reports bootstrap mode, and when clicked attempts to call `promoteToAdmin` for the currently logged-in principal.",
       "files": [
-        "frontend/src/components/tracking/FastingModule.tsx",
-        "frontend/src/components/tracking/MurojaahModule.tsx",
-        "frontend/src/components/tracking/SedekahModule.tsx",
-        "frontend/src/components/tracking/SholatModule.tsx",
-        "frontend/src/components/tracking/TahfidzModule.tsx",
-        "frontend/src/components/tracking/TilawahModule.tsx",
-        "frontend/src/hooks/useBackendQueries.ts",
-        "frontend/src/pages/DashboardPage.tsx"
+        "frontend/src/components/auth/AdminAccessDeniedScreen.tsx",
+        "frontend/src/hooks/useBackendQueries.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -23,16 +17,16 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-27"
+        "REQ-35"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-replace-the-monthly-progress-bar-visualization-with-a-line-chart-svg-based-so-the-monthly-progress-page-shows-a-line-only-chart-for-daily-percentage-progress-instead-of-vertical-bars",
-      "featureTitle": "Replace the monthly progress “bar” visualization with a line chart (SVG-based) so the monthly progress page shows a line-only chart for daily percentage progress instead of vertical bars.",
+      "featureId": "feature-improve-the-admin-gate-error-handling-so-that-if-role-admin-checks-fail-e-g-backend-trap-network-error-the-page-shows-a-clear-english-error-state-and-a-retry-action-rather-than-only-generic-messaging",
+      "featureTitle": "Improve the /admin gate error handling so that if role/admin checks fail (e.g., backend trap/network error), the page shows a clear English error state and a retry action rather than only generic messaging.",
       "files": [
-        "frontend/src/components/dashboard/MonthlyProgressChart.tsx",
-        "frontend/src/pages/MonthlyProgressPage.tsx"
+        "frontend/src/hooks/useAuth.ts",
+        "frontend/src/pages/admin/AdminGatePage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -43,33 +37,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-28"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-any-affected-loading-error-empty-ui-states-introduced-or-modified-by-these-changes-to-use-english-user-facing-text-in-the-modified-components-pages",
-      "featureTitle": "Update any affected loading/error/empty UI states introduced or modified by these changes to use English user-facing text in the modified components/pages.",
-      "files": [
-        "frontend/src/components/tracking/FastingModule.tsx",
-        "frontend/src/components/tracking/MurojaahModule.tsx",
-        "frontend/src/components/tracking/SedekahModule.tsx",
-        "frontend/src/components/tracking/SholatModule.tsx",
-        "frontend/src/components/tracking/TahfidzModule.tsx",
-        "frontend/src/components/tracking/TilawahModule.tsx",
-        "frontend/src/pages/DashboardPage.tsx",
-        "frontend/src/pages/MonthlyProgressPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-29"
+        "REQ-36"
       ],
       "confidence": "high"
     }

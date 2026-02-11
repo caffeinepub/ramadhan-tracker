@@ -5,8 +5,8 @@ import { useGetCallerUserRole, useIsCallerAdmin } from './useBackendQueries';
 export function useAuth() {
   const { identity, login, clear, loginStatus } = useInternetIdentity();
   const queryClient = useQueryClient();
-  const { data: userRole, isLoading: roleLoading } = useGetCallerUserRole();
-  const { data: isAdmin, isLoading: adminLoading } = useIsCallerAdmin();
+  const roleQuery = useGetCallerUserRole();
+  const adminQuery = useIsCallerAdmin();
 
   const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
 
@@ -15,14 +15,23 @@ export function useAuth() {
     queryClient.clear();
   };
 
+  const retry = () => {
+    roleQuery.refetch();
+    adminQuery.refetch();
+  };
+
+  const hasError = roleQuery.isError || adminQuery.isError;
+
   return {
     identity,
     login,
     logout,
     loginStatus,
     isAuthenticated,
-    userRole,
-    isAdmin: isAdmin ?? false,
-    isLoading: roleLoading || adminLoading,
+    userRole: roleQuery.data,
+    isAdmin: adminQuery.data ?? false,
+    isLoading: roleQuery.isLoading || adminQuery.isLoading,
+    hasError,
+    retry,
   };
 }

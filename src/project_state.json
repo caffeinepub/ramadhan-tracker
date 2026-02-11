@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 13,
+  "projectStateVersion": 17,
   "summary": "Mobile-first web app “Ramadhan Tracker” for personal worship tracking during Ramadhan, with admin-created accounts (no self-signup), user dashboard, daily tracking modules (puasa, tilawah, murojaah, tahfidz, sedekah subuh, and sholat), rotating Islamic content slides managed by admin, downloadable progress reports (PDF/CSV), full admin panel for user/content management and statistics, and UI language updated to Bahasa Indonesia.",
   "architectural_notes": [
     "No public self-registration; all user accounts provisioned by admin.",
@@ -14,7 +14,9 @@
   "known_issues": [
     "Daily motivation slides/carousel (Tadabbur, Hadith, Islamic Quote) feature is not appearing in the live app/UI despite being added.",
     "Fitur save progress (penyimpanan progres/rekaman tracking harian) tidak berjalan.",
-    "Progres harian tidak tersimpan setelah user keluar/menutup web app; user harus menandai ulang dari awal."
+    "Progres harian tidak tersimpan setelah user keluar/menutup web app; user harus menandai ulang dari awal.",
+    "User cannot access /admin on production URL (https://ramadhan-tracker-agt.caffeine.xyz/admin); admin role/permissions for the user account may not be set or recognized.",
+    "Admin access still not granted after Version 7 deployment; user still cannot access /admin on production (role assignment/bootstrap may still be failing)."
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -233,6 +235,38 @@
         "REQ-29"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-improve-the-frontend-admin-access-denied-experience-so-non-admin-users-understand-why-they-cannot-access-the-admin-panel-and-what-to-do-next-using-english-user-facing-text",
+      "title": "Improve the frontend /admin access-denied experience so non-admin users understand why they cannot access the Admin Panel and what to do next, using English user-facing text.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-frontend-admin-guard-logic-does-not-incorrectly-redirect-while-the-admin-role-check-is-still-loading-to-avoid-false-denials-for-real-admins-use-english-user-facing-text-for-any-new-loading-error-ui-introduced",
+      "title": "Ensure the frontend admin-guard logic does not incorrectly redirect while the admin-role check is still loading, to avoid false denials for real admins (use English user-facing text for any new loading/error UI introduced).",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-admin-access-denied-screen-to-include-an-english-bootstrap-admin-access-action-that-is-shown-only-when-the-backend-reports-bootstrap-mode-and-when-clicked-attempts-to-call-promotetoadmin-for-the-currently-logged-in-principal",
+      "title": "Update the Admin access-denied screen to include an English \"Bootstrap Admin Access\" action that is shown only when the backend reports bootstrap mode, and when clicked attempts to call `promoteToAdmin` for the currently logged-in principal.",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-the-admin-gate-error-handling-so-that-if-role-admin-checks-fail-e-g-backend-trap-network-error-the-page-shows-a-clear-english-error-state-and-a-retry-action-rather-than-only-generic-messaging",
+      "title": "Improve the /admin gate error handling so that if role/admin checks fail (e.g., backend trap/network error), the page shows a clear English error state and a retry action rather than only generic messaging.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -340,6 +374,30 @@
       "id": "AR-31",
       "summary": "Ubah visualisasi di dashboard statistik/progress: jangan pakai bar chart (balok), gunakan line chart (chart garis) saja.",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-32",
+      "summary": "Add a secure backend mechanism to grant the Admin role to a specified Principal so the user can access /admin on production (https://ramadhan-tracker-agt.caffeine.xyz/admin). This must include a safe bootstrap path for deployments where no Admin exists yet (to prevent permanent lockout).",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Fix the backend admin-bootstrap detection so `promoteToAdmin` correctly determines whether any Admin already exists, even when there are no `userTasks` entries yet (preventing permanent lockout where no one can become Admin).",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Add a backend query API that allows the frontend to safely determine whether the canister is in \"bootstrap mode\" (i.e., no Admin exists yet), so the UI can offer a first-admin recovery action only when appropriate.",
+      "reqIds": [
+        "REQ-34"
+      ],
       "status": "pending"
     }
   ],

@@ -1,8 +1,8 @@
 {
   "frontend/src/index.css": "Global styles with Islamic minimal theme using warm sand/ivory backgrounds and emerald/olive accents in OKLCH color space, supporting both light and dark modes.",
-  "frontend/src/App.tsx": "Main application component with TanStack Router setup including new authenticated /progres-bulanan route with same auth guard pattern as dashboard.",
-  "frontend/src/hooks/useAuth.ts": "Authentication hook that composes Internet Identity with role queries, providing login/logout functions and user authentication state.",
-  "frontend/src/hooks/useBackendQueries.ts": "React Query hooks for all backend operations with task mutation that preserves existing fields when updating and immediately invalidates cache to ensure UI consistency across page reloads.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup, delegating admin authorization to AdminGatePage instead of immediate redirect.",
+  "frontend/src/hooks/useAuth.ts": "Authentication hook that composes Internet Identity with role queries, providing login/logout functions, user authentication state, error state, and retry function for refetching role/admin checks.",
+  "frontend/src/hooks/useBackendQueries.ts": "React Query hooks for all backend operations including new useIsAdminBootstrapAvailable hook that checks if bootstrap mode is enabled, with proper cache invalidation for the bootstrap query key in usePromoteToAdmin.",
   "frontend/src/components/theme/ThemeProvider.tsx": "Theme context provider managing light/dark mode toggle with localStorage persistence and system preference detection.",
   "frontend/src/components/layout/AppShell.tsx": "Main layout wrapper component providing consistent structure with header, main content area, and footer.",
   "frontend/src/components/layout/AppHeader.tsx": "Sticky header with Indonesian labels showing app branding, theme toggle, and user dropdown menu with profile name, monthly progress navigation, and admin/logout options.",
@@ -31,5 +31,7 @@
   "frontend/src/utils/progress.ts": "Shared progress calculation helper that computes task completion percentage using the same 6-item rule as DailyProgressBar (5 wajib prayers count as one item).",
   "frontend/src/utils/month.ts": "Month utility functions for deriving month boundaries, day counts, day arrays, and formatting month labels in Bahasa Indonesia.",
   "frontend/src/components/dashboard/MonthlyProgressChart.tsx": "Lightweight SVG-based line chart component that renders daily completion percentages as a connected line with data points, Y-axis percentage labels, and responsive horizontal scrolling for mobile.",
-  "frontend/src/pages/MonthlyProgressPage.tsx": "Authenticated monthly progress dashboard page with month navigation, statistics cards, and line chart visualization using existing useGetTasksInRange hook with proper loading/error states."
+  "frontend/src/pages/MonthlyProgressPage.tsx": "Authenticated monthly progress dashboard page with month navigation, statistics cards, and line chart visualization using existing useGetTasksInRange hook with proper loading/error states.",
+  "frontend/src/components/auth/AdminAccessDeniedScreen.tsx": "Access denied screen displaying user's Principal ID with copy-to-clipboard functionality, conditional Bootstrap Admin Access button when bootstrap mode is enabled, and navigation back to dashboard.",
+  "frontend/src/pages/admin/AdminGatePage.tsx": "Admin route guard component that handles loading, error (with retry action), and access denied states before rendering AdminPanelPage, preventing premature redirects."
 }

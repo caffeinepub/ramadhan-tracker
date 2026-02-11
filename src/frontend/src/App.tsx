@@ -3,7 +3,7 @@ import { ThemeProvider } from './components/theme/ThemeProvider';
 import { AppShell } from './components/layout/AppShell';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
-import AdminPanelPage from './pages/admin/AdminPanelPage';
+import AdminGatePage from './pages/admin/AdminGatePage';
 import MonthlyProgressPage from './pages/MonthlyProgressPage';
 import { useAuth } from './hooks/useAuth';
 import { Toaster } from '@/components/ui/sonner';
@@ -60,15 +60,13 @@ const monthlyProgressRoute = createRoute({
 const adminRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/admin',
-  component: AdminPanelPage,
+  component: AdminGatePage,
   beforeLoad: ({ context }: any) => {
     const auth = context?.auth;
     if (!auth?.isAuthenticated) {
       throw redirect({ to: '/login' });
     }
-    if (!auth?.isAdmin) {
-      throw redirect({ to: '/' });
-    }
+    // Remove the isAdmin check here - let AdminGatePage handle it
   },
 });
 

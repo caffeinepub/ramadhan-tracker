@@ -100,8 +100,11 @@ export interface backendInterface {
         };
         sedekahDays: bigint;
     }>;
+    isAdminBootstrapAvailable(): Promise<boolean>;
     isCallerAdmin(): Promise<boolean>;
+    promoteToAdmin(target: Principal): Promise<void>;
     reactivateUser(user: Principal): Promise<void>;
+    removeAdminRights(target: Principal): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     setSedekahPaymentLink(link: string): Promise<void>;
     updateUserProfile(user: Principal, profile: UserProfile): Promise<void>;

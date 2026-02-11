@@ -183,8 +183,11 @@ export interface backendInterface {
         };
         sedekahDays: bigint;
     }>;
+    isAdminBootstrapAvailable(): Promise<boolean>;
     isCallerAdmin(): Promise<boolean>;
+    promoteToAdmin(target: Principal): Promise<void>;
     reactivateUser(user: Principal): Promise<void>;
+    removeAdminRights(target: Principal): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     setSedekahPaymentLink(link: string): Promise<void>;
     updateUserProfile(user: Principal, profile: UserProfile): Promise<void>;
@@ -474,6 +477,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async isAdminBootstrapAvailable(): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.isAdminBootstrapAvailable();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.isAdminBootstrapAvailable();
+            return result;
+        }
+    }
     async isCallerAdmin(): Promise<boolean> {
         if (this.processError) {
             try {
@@ -488,6 +505,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async promoteToAdmin(arg0: Principal): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.promoteToAdmin(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.promoteToAdmin(arg0);
+            return result;
+        }
+    }
     async reactivateUser(arg0: Principal): Promise<void> {
         if (this.processError) {
             try {
@@ -499,6 +530,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.reactivateUser(arg0);
+            return result;
+        }
+    }
+    async removeAdminRights(arg0: Principal): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.removeAdminRights(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.removeAdminRights(arg0);
             return result;
         }
     }
