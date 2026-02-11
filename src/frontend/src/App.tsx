@@ -7,6 +7,7 @@ import AdminGatePage from './pages/admin/AdminGatePage';
 import MonthlyProgressPage from './pages/MonthlyProgressPage';
 import { useAuth } from './hooks/useAuth';
 import { Toaster } from '@/components/ui/sonner';
+import { setReturnToPath } from './utils/urlParams';
 
 function RootComponent() {
   return (
@@ -63,10 +64,21 @@ const adminRoute = createRoute({
   component: AdminGatePage,
   beforeLoad: ({ context }: any) => {
     const auth = context?.auth;
+    
+    // Wait for auth to be resolved before making decisions
+    if (!auth?.isAuthResolved) {
+      // Auth is still initializing, let AdminGatePage handle the loading state
+      return;
+    }
+    
+    // Auth is resolved and user is not authenticated
     if (!auth?.isAuthenticated) {
+      // Store return intent before redirecting
+      setReturnToPath('/admin');
       throw redirect({ to: '/login' });
     }
-    // Remove the isAdmin check here - let AdminGatePage handle it
+    
+    // User is authenticated - let AdminGatePage handle admin check
   },
 });
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 17,
-  "summary": "Mobile-first web app “Ramadhan Tracker” for personal worship tracking during Ramadhan, with admin-created accounts (no self-signup), user dashboard, daily tracking modules (puasa, tilawah, murojaah, tahfidz, sedekah subuh, and sholat), rotating Islamic content slides managed by admin, downloadable progress reports (PDF/CSV), full admin panel for user/content management and statistics, and UI language updated to Bahasa Indonesia.",
+  "projectStateVersion": 27,
+  "summary": "Mobile-first web app “Ramadhan Tracker” for personal worship tracking during Ramadhan, with admin-created accounts (no self-signup), user dashboard, daily tracking modules (puasa, tilawah, murojaah, tahfidz, sedekah subuh, and sholat), rotating Islamic content slides managed by admin, downloadable progress reports (PDF/CSV), monthly progress dashboard, full admin panel for user/content management and statistics, and UI language to be Bahasa Indonesia.",
   "architectural_notes": [
     "No public self-registration; all user accounts provisioned by admin.",
     "Role-based access control (Admin vs User) with users restricted to their own data.",
@@ -9,14 +9,22 @@
     "Separate API surfaces/permissions for admin operations vs user operations.",
     "Default/configured Sedekah Subuh donation button should open: https://tribelio.page/site/donation/9U7UPN3Y (still admin-configurable).",
     "Daily motivation slide content types include: tadabbur (Quran reflection), hadits, and Islamic quotes.",
-    "Bahasa aplikasi diubah menjadi Bahasa Indonesia (UI copy/label/empty state/error message)."
+    "Bahasa aplikasi diubah menjadi Bahasa Indonesia (UI copy/label/empty state/error message).",
+    "User provided Principal ID for admin grant/bootstrapping: ezpl2-ko35d-vzh3x-badkn-2jvq4-g6epk-lgsbk-4vd5b-bpn5o-riqsb-gqe",
+    "Bahasa UI harus menggunakan Bahasa Indonesia saja untuk perubahan/fitur terbaru (termasuk loading/error/empty states).",
+    "Fitur download laporan dipusatkan pada dashboard/halaman progress bulanan saja."
   ],
   "known_issues": [
     "Daily motivation slides/carousel (Tadabbur, Hadith, Islamic Quote) feature is not appearing in the live app/UI despite being added.",
     "Fitur save progress (penyimpanan progres/rekaman tracking harian) tidak berjalan.",
     "Progres harian tidak tersimpan setelah user keluar/menutup web app; user harus menandai ulang dari awal.",
     "User cannot access /admin on production URL (https://ramadhan-tracker-agt.caffeine.xyz/admin); admin role/permissions for the user account may not be set or recognized.",
-    "Admin access still not granted after Version 7 deployment; user still cannot access /admin on production (role assignment/bootstrap may still be failing)."
+    "Admin access still not granted after Version 7 deployment; user still cannot access /admin on production (role assignment/bootstrap may still be failing).",
+    "UI aplikasi tidak menampilkan Principal ID pengguna, sehingga user tidak bisa memberikan Principal ID secara manual untuk proses grant role Admin.",
+    "Admin role still needs to be granted/promoted for the provided Principal ID on production: ezpl2-ko35d-vzh3x-badkn-2jvq4-g6epk-lgsbk-4vd5b-bpn5o-riqsb-gqe",
+    "Jadwal/jam sholat yang ditampilkan belum sesuai/akurat dengan jadwal sholat yang benar.",
+    "Tampilan progres harian masih bermasalah dan perlu diperbaiki.",
+    "Fitur download perlu dipindahkan agar hanya tersedia di halaman/dashboard progress bulanan."
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -267,6 +275,94 @@
         "REQ-36"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-fix-the-admin-route-guard-so-it-does-not-redirect-authenticated-users-to-login-during-the-initial-internet-identity-session-rehydration-loading-phase-instead-allow-admin-to-render-admingatepage-and-show-its-loading-state-until-authentication-status-is-known",
+      "title": "Fix the /admin route guard so it does not redirect authenticated users to /login during the initial Internet Identity session rehydration/loading phase; instead, allow /admin to render AdminGatePage and show its loading state until authentication status is known.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-safe-return-to-admin-flow-when-an-unauthenticated-user-attempts-to-access-admin-and-is-redirected-to-login-after-successful-login-the-app-must-navigate-back-to-admin-instead-of-always-navigating-to",
+      "title": "Add a safe return-to-admin flow: when an unauthenticated user attempts to access /admin and is redirected to /login, after successful login the app must navigate back to /admin (instead of always navigating to /).",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-adminaccessdeniedscreen-reliably-offers-the-bootstrap-action-only-when-bootstrap-mode-is-available-and-after-a-successful-bootstrap-promotion-it-re-checks-admin-status-and-allows-access-to-the-admin-panel-without-requiring-a-hard-refresh",
+      "title": "Ensure AdminAccessDeniedScreen reliably offers the bootstrap action only when bootstrap mode is available, and after a successful bootstrap promotion it re-checks admin status and allows access to the Admin Panel without requiring a hard refresh.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-dashboard-section-that-shows-daily-prayer-times-that-automatically-update-each-day-based-on-the-user-selected-indonesia-timezone-wib-wita-wit-the-ui-must-let-the-user-select-the-timezone-and-must-display-the-day-s-prayer-schedule-for-that-timezone",
+      "title": "Add a new dashboard section that shows daily prayer times that automatically update each day based on the user-selected Indonesia timezone (WIB, WITA, WIT). The UI must let the user select the timezone and must display the day’s prayer schedule for that timezone.",
+      "reqIds": [
+        "REQ-49"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-progress-overview-area-on-the-dashboard-to-also-display-the-previous-day-s-recorded-progress-for-tilawah-tahfidz-and-murojaah-surah-verse-range-so-the-user-can-quickly-see-what-they-reached-yesterday",
+      "title": "Update the progress/overview area on the dashboard to also display the previous day’s recorded progress for Tilawah, Tahfidz, and Murojaah (surah + verse range) so the user can quickly see what they reached yesterday.",
+      "reqIds": [
+        "REQ-50"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-existing-report-download-feature-to-support-choosing-an-export-format-csv-or-pdf-pdf-export-must-be-generated-from-the-same-backend-task-data-currently-used-for-csv-export-and-include-the-same-fields-currently-exported-in-csv-including-sholat-fields",
+      "title": "Enhance the existing report download feature to support choosing an export format: CSV or PDF. PDF export must be generated from the same backend task data currently used for CSV export and include the same fields currently exported in CSV (including sholat fields).",
+      "reqIds": [
+        "REQ-51"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-any-user-facing-text-changed-or-introduced-while-implementing-req-49-to-req-51-is-in-english-including-dashboard-titles-subtitles-progress-labels-empty-loading-error-states-and-toasts-in-the-modified-components",
+      "title": "Ensure any user-facing text changed or introduced while implementing REQ-49 to REQ-51 is in English, including dashboard titles/subtitles, progress labels, empty/loading/error states, and toasts in the modified components.",
+      "reqIds": [
+        "REQ-52"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-prayer-times-calculation-so-displayed-times-are-realistic-and-match-the-selected-indonesia-timezone-wib-wita-wit-avoiding-negative-invalid-values-and-ensuring-times-fall-within-00-00-23-59-for-the-selected-date",
+      "title": "Fix the prayer times calculation so displayed times are realistic and match the selected Indonesia timezone (WIB/WITA/WIT), avoiding negative/invalid values and ensuring times fall within 00:00–23:59 for the selected date.",
+      "reqIds": [
+        "REQ-53"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-standardize-the-user-facing-language-to-bahasa-indonesia-for-the-ui-areas-affected-by-this-change-set-dashboard-header-copy-prayer-times-section-labels-states-daily-overview-tiles-yesterday-progress-summary-and-the-report-download-ui",
+      "title": "Standardize the user-facing language to Bahasa Indonesia for the UI areas affected by this change set: Dashboard header copy, Prayer Times section labels/states, daily overview tiles, yesterday progress summary, and the report download UI.",
+      "reqIds": [
+        "REQ-54"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-the-daily-progress-progres-harian-component-ui-and-behavior-so-it-is-visually-consistent-handles-loading-empty-states-and-uses-the-same-completion-rules-as-the-shared-progress-utility",
+      "title": "Improve the Daily Progress (Progres Harian) component UI and behavior so it is visually consistent, handles loading/empty states, and uses the same completion rules as the shared progress utility.",
+      "reqIds": [
+        "REQ-55"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-move-the-progress-report-download-feature-so-it-is-available-only-on-the-monthly-progress-page-and-remove-it-from-the-main-dashboard-page",
+      "title": "Move the progress report download feature so it is available only on the Monthly Progress page, and remove it from the main Dashboard page.",
+      "reqIds": [
+        "REQ-56"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -398,6 +494,114 @@
       "reqIds": [
         "REQ-34"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-37",
+      "summary": "Make backend bootstrap-admin detection and promotion robust by ensuring `isAdminBootstrapAvailable()` reflects whether any Admin exists in the access-control state (not a potentially stale counter), and ensure `promoteToAdmin` only permits self-bootstrapping when bootstrap mode is truly active.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-38",
+      "summary": "If the canister has existing deployed state, add conditional upgrade/migration logic (migration.mo) to reconcile any legacy/stale admin bootstrap tracking so production deployments cannot get permanently locked out of Admin creation.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-39",
+      "summary": "Add a one-time, safe bootstrap seeding mechanism so that the Principal `ezpl2-ko35d-vzh3x-badkn-2jvq4-g6epk-lgsbk-4vd5b-bpn5o-riqsb-gqe` is automatically granted the Admin role on production deployments when (and only when) the canister has no Admin yet.",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-40",
+      "summary": "Fix backend Admin bootstrap detection so `isAdminBootstrapAvailable()` reflects whether any Admin exists in the access-control state (not a potentially stale counter), and ensure `promoteToAdmin` only permits self-bootstrapping when bootstrap mode is truly active.",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-41",
+      "summary": "If the canister has existing deployed state, add conditional upgrade/migration logic to reconcile any legacy/stale Admin bootstrap tracking so the canister cannot become permanently locked out of Admin creation.",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-42",
+      "summary": "Persist admin/user role assignments across canister upgrades so that Admin access does not reset after deployments.",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-43",
+      "summary": "Fix admin bootstrap detection so `isAdminBootstrapAvailable()` reflects whether any Admin exists in the persisted access-control state (not a potentially stale/reset counter) and ensure `promoteToAdmin` only permits self-bootstrapping when bootstrap mode is truly active.",
+      "reqIds": [
+        "REQ-46"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-44",
+      "summary": "Add a one-time, safe bootstrap seeding mechanism that automatically grants the Admin role to Principal `ezpl2-ko35d-vzh3x-badkn-2jvq4-g6epk-lgsbk-4vd5b-bpn5o-riqsb-gqe` on deployment/upgrade if (and only if) the canister currently has no Admin.",
+      "reqIds": [
+        "REQ-47"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-45",
+      "summary": "If the canister has existing deployed state, add conditional upgrade/migration logic to reconcile any legacy/stale admin-bootstrap tracking so production deployments cannot become permanently locked out of Admin creation.",
+      "reqIds": [
+        "REQ-48"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-46",
+      "summary": "Tambahkan jadwal/jam sholat yang otomatis ter-update setiap hari berdasarkan lokasi/zona waktu pengguna (WIB/WITA/WIT).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-47",
+      "summary": "Di tampilan progress, tampilkan capaian hari sebelumnya untuk Tilawah, Tahfidz, dan Murojaah (surah + rentang ayat) agar user tahu progres kemarin.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-48",
+      "summary": "Tambahkan opsi download laporan/progress dalam format PDF (selain CSV).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-49",
+      "summary": "Fix jadwal/jam sholat agar akurat dan sesuai dengan jadwal sholat yang benar untuk timezone/lokasi yang dipilih (WIB/WITA/WIT).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-50",
+      "summary": "Ubah/standarkan bahasa UI menjadi Bahasa Indonesia saja (termasuk label, empty/loading/error states, dan toasts) pada bagian yang terdampak perubahan terbaru.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-51",
+      "summary": "Perbaiki tampilan progres harian, dan pindahkan fitur download laporan agar hanya ada di dashboard/halaman progress bulanan (bukan di tempat lain).",
+      "reqIds": [],
       "status": "pending"
     }
   ],

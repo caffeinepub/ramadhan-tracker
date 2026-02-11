@@ -2,11 +2,12 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-admin-access-denied-screen-to-include-an-english-bootstrap-admin-access-action-that-is-shown-only-when-the-backend-reports-bootstrap-mode-and-when-clicked-attempts-to-call-promotetoadmin-for-the-currently-logged-in-principal",
-      "featureTitle": "Update the Admin access-denied screen to include an English \"Bootstrap Admin Access\" action that is shown only when the backend reports bootstrap mode, and when clicked attempts to call `promoteToAdmin` for the currently logged-in principal.",
+      "featureId": "feature-fix-the-prayer-times-calculation-so-displayed-times-are-realistic-and-match-the-selected-indonesia-timezone-wib-wita-wit-avoiding-negative-invalid-values-and-ensuring-times-fall-within-00-00-23-59-for-the-selected-date",
+      "featureTitle": "Fix the prayer times calculation so displayed times are realistic and match the selected Indonesia timezone (WIB/WITA/WIT), avoiding negative/invalid values and ensuring times fall within 00:00–23:59 for the selected date.",
       "files": [
-        "frontend/src/components/auth/AdminAccessDeniedScreen.tsx",
-        "frontend/src/hooks/useBackendQueries.ts"
+        "frontend/src/components/dashboard/PrayerTimesSection.tsx",
+        "frontend/src/hooks/usePrayerTimes.ts",
+        "frontend/src/utils/prayerTimes.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -17,16 +18,19 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-35"
+        "REQ-53"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-improve-the-admin-gate-error-handling-so-that-if-role-admin-checks-fail-e-g-backend-trap-network-error-the-page-shows-a-clear-english-error-state-and-a-retry-action-rather-than-only-generic-messaging",
-      "featureTitle": "Improve the /admin gate error handling so that if role/admin checks fail (e.g., backend trap/network error), the page shows a clear English error state and a retry action rather than only generic messaging.",
+      "featureId": "feature-standardize-the-user-facing-language-to-bahasa-indonesia-for-the-ui-areas-affected-by-this-change-set-dashboard-header-copy-prayer-times-section-labels-states-daily-overview-tiles-yesterday-progress-summary-and-the-report-download-ui",
+      "featureTitle": "Standardize the user-facing language to Bahasa Indonesia for the UI areas affected by this change set: Dashboard header copy, Prayer Times section labels/states, daily overview tiles, yesterday progress summary, and the report download UI.",
       "files": [
-        "frontend/src/hooks/useAuth.ts",
-        "frontend/src/pages/admin/AdminGatePage.tsx"
+        "frontend/src/components/dashboard/DailyOverviewTiles.tsx",
+        "frontend/src/components/dashboard/PrayerTimesSection.tsx",
+        "frontend/src/components/dashboard/YesterdayProgressSummary.tsx",
+        "frontend/src/components/reports/DownloadCsvCard.tsx",
+        "frontend/src/pages/DashboardPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -37,7 +41,48 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-36"
+        "REQ-54"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-improve-the-daily-progress-progres-harian-component-ui-and-behavior-so-it-is-visually-consistent-handles-loading-empty-states-and-uses-the-same-completion-rules-as-the-shared-progress-utility",
+      "featureTitle": "Improve the Daily Progress (Progres Harian) component UI and behavior so it is visually consistent, handles loading/empty states, and uses the same completion rules as the shared progress utility.",
+      "files": [
+        "frontend/src/components/dashboard/DailyProgressBar.tsx",
+        "frontend/src/utils/progress.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-55"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-move-the-progress-report-download-feature-so-it-is-available-only-on-the-monthly-progress-page-and-remove-it-from-the-main-dashboard-page",
+      "featureTitle": "Move the progress report download feature so it is available only on the Monthly Progress page, and remove it from the main Dashboard page.",
+      "files": [
+        "frontend/src/components/reports/DownloadCsvCard.tsx",
+        "frontend/src/pages/DashboardPage.tsx",
+        "frontend/src/pages/MonthlyProgressPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-56"
       ],
       "confidence": "high"
     }

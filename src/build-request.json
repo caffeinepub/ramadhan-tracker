@@ -1,91 +1,97 @@
 {
   "kind": "build_request",
-  "title": "Fix admin role bootstrap so the user can access /admin on production",
+  "title": "Fix prayer time accuracy, standardize affected UI to Indonesian, improve daily progress UI, and move report download to Monthly Progress page",
   "priority": "high",
   "requirements": [
     {
-      "id": "REQ-33",
-      "text": "Fix the backend admin-bootstrap detection so `promoteToAdmin` correctly determines whether any Admin already exists, even when there are no `userTasks` entries yet (preventing permanent lockout where no one can become Admin).",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "akses adminya masih belum saya dapat"
-        ]
-      },
-      "acceptanceCriteria": [
-        "On a fresh deployment with no users/tasks created, calling `promoteToAdmin(<principal>)` successfully grants the Admin role to the target principal.",
-        "On a deployment where an Admin role already exists, `promoteToAdmin` rejects non-admin callers with an English error message.",
-        "The check for \"any admin exists\" does not rely on `userTasks.keys()` as the only source of truth (so it works even when no tasks exist yet)."
-      ]
-    },
-    {
-      "id": "REQ-34",
-      "text": "Add a backend query API that allows the frontend to safely determine whether the canister is in \"bootstrap mode\" (i.e., no Admin exists yet), so the UI can offer a first-admin recovery action only when appropriate.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "akses adminya masih belum saya dapat"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A new query method is available that returns whether any Admin exists (or equivalently whether bootstrap mode is enabled).",
-        "The method is callable by authenticated users and does not expose sensitive data beyond the boolean/bootstrap status.",
-        "The returned value is consistent with the backend logic used by `promoteToAdmin`."
-      ]
-    },
-    {
-      "id": "REQ-35",
-      "text": "Update the Admin access-denied screen to include an English \"Bootstrap Admin Access\" action that is shown only when the backend reports bootstrap mode, and when clicked attempts to call `promoteToAdmin` for the currently logged-in principal.",
+      "id": "REQ-53",
+      "text": "Fix the prayer times calculation so displayed times are realistic and match the selected Indonesia timezone (WIB/WITA/WIT), avoiding negative/invalid values and ensuring times fall within 00:00–23:59 for the selected date.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-6"
         ],
         "quotes": [
-          "akses adminya masih belum saya dapat"
+          "perbaiki jamnya karena belum sesuai dengan jadwal sholat"
         ]
       },
       "acceptanceCriteria": [
-        "When bootstrap mode is true, the access-denied screen shows a button labeled in English (e.g., \"Bootstrap Admin Access\").",
-        "Clicking the button calls the existing promote mutation with the current principal and shows a success toast in English on success.",
-        "After success, the app re-checks admin status (React Query invalidation/refetch) and allows navigation to /admin without requiring manual cache clearing.",
-        "When bootstrap mode is false, the bootstrap button is not displayed."
+        "On the Dashboard, the Prayer Times section never renders negative times (e.g., \"-15:12\") or invalid formats.",
+        "For each timezone option (WIB/WITA/WIT), Fajr < Sunrise < Dhuhr < Asr < Maghrib < Isha for the same selected date.",
+        "Switching the timezone updates the displayed prayer times immediately and persists the selection across reloads (localStorage).",
+        "Prayer times update correctly when the calendar date rolls over (auto-refresh behavior still works)."
       ]
     },
     {
-      "id": "REQ-36",
-      "text": "Improve the /admin gate error handling so that if role/admin checks fail (e.g., backend trap/network error), the page shows a clear English error state and a retry action rather than only generic messaging.",
+      "id": "REQ-54",
+      "text": "Standardize the user-facing language to Bahasa Indonesia for the UI areas affected by this change set: Dashboard header copy, Prayer Times section labels/states, daily overview tiles, yesterday progress summary, and the report download UI.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-6"
         ],
         "quotes": [
-          "akses adminya masih belum saya dapat"
+          "ubah ke bahasa indonesia saja"
         ]
       },
       "acceptanceCriteria": [
-        "If the admin-role check query errors, /admin shows an English error message that indicates the admin status could not be verified.",
-        "The error UI provides an English \"Retry\" action that re-triggers the relevant role/admin queries.",
-        "The existing loading state remains unchanged and continues to prevent false denials while checks are in progress."
+        "DashboardPage no longer shows English strings like “Welcome”, “Track your daily worship activities”, “Complete Your Profile”, “Save Profile”, and related form placeholders; they are replaced with Bahasa Indonesia equivalents.",
+        "PrayerTimesSection labels and states (title, field labels, loading/empty/error text, retry action) are in Bahasa Indonesia.",
+        "DailyOverviewTiles titles and summaries are in Bahasa Indonesia (e.g., Prayer/Fasting/Completed/Not recorded/Not completed are localized).",
+        "DownloadCsvCard labels/toasts/button states are in Bahasa Indonesia (including validation errors and success/failure toasts).",
+        "No new English strings are introduced in the modified components (unless they are non-user-facing logs)."
+      ]
+    },
+    {
+      "id": "REQ-55",
+      "text": "Improve the Daily Progress (Progres Harian) component UI and behavior so it is visually consistent, handles loading/empty states, and uses the same completion rules as the shared progress utility.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "perbaiki tampilan progres hariannya juga"
+        ]
+      },
+      "acceptanceCriteria": [
+        "DailyProgressBar shows a clear loading skeleton or loading state while the task query is in-flight, instead of implicitly showing 0 progress.",
+        "DailyProgressBar uses the shared progress calculation helper (frontend/src/utils/progress.ts) so its percentage/count logic is consistent with other progress views.",
+        "If there is no task data for the selected date, the component shows an explicit empty state message in Bahasa Indonesia and does not misleadingly imply recorded completion.",
+        "The progress bar and accompanying label are visually aligned and responsive (no overflow/truncation issues on mobile widths)."
+      ]
+    },
+    {
+      "id": "REQ-56",
+      "text": "Move the progress report download feature so it is available only on the Monthly Progress page, and remove it from the main Dashboard page.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "fitur download pindahkan ke dashboard (progress bulanan) saja"
+        ]
+      },
+      "acceptanceCriteria": [
+        "DashboardPage no longer renders the DownloadCsvCard (or any report download UI).",
+        "MonthlyProgressPage renders the report download UI (CSV/PDF) in a sensible location within the page layout.",
+        "The download functionality continues to work (CSV and PDF export from backend task range), with Bahasa Indonesia labels/toasts.",
+        "There is only one place in the authenticated UI where the report download UI is accessible: the Monthly Progress page."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo (no additional services).",
-    "Do not edit any files under frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or anything in frontend/src/components/ui (compose instead).",
-    "Use English for any new or modified user-facing text touched by this change (toasts, buttons, error states)."
+    "Do not modify files under frontend/src/components/ui (compose existing shadcn components instead).",
+    "Do not modify any files listed as immutable in SYSTEM_CONTEXT.frontend.immutablePaths.",
+    "Backend must remain single-actor (no additional backend services).",
+    "Use English only for this build request document; implement Bahasa Indonesia for user-facing UI per requirements."
   ],
   "nonGoals": [
-    "Implementing third-party authentication providers beyond Internet Identity.",
-    "Adding new admin features unrelated to restoring admin access (e.g., new admin tabs or new data models).",
-    "Changing the existing dashboard feature set or tracking modules."
+    "Changing the backend schema or task data model for prayer times.",
+    "Adding location/GPS-based prayer time calculations (keep using the existing WIB/WITA/WIT selection model).",
+    "Adding new export formats beyond CSV and PDF.",
+    "Redesigning the entire application theme outside of the affected components/pages."
   ],
   "imageRequirements": {
     "required": [],

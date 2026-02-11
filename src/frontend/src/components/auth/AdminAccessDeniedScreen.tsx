@@ -25,6 +25,8 @@ export function AdminAccessDeniedScreen() {
     try {
       await promoteToAdminMutation.mutateAsync(identity.getPrincipal());
       toast.success('Admin access granted successfully!');
+      // The mutation will invalidate queries, causing AdminGatePage to re-render
+      // and show the admin panel without needing a manual navigation
     } catch (error: any) {
       console.error('Bootstrap admin error:', error);
       toast.error(error.message || 'Failed to grant admin access');
@@ -46,7 +48,7 @@ export function AdminAccessDeniedScreen() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {isBootstrapAvailable && !bootstrapLoading && (
+          {isBootstrapAvailable === true && !bootstrapLoading && (
             <div className="p-4 bg-primary/10 rounded-md border border-primary/20 space-y-3">
               <div className="flex items-start gap-2">
                 <ShieldCheck className="h-5 w-5 text-primary mt-0.5" />

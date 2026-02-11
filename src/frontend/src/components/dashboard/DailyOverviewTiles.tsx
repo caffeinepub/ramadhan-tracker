@@ -54,7 +54,7 @@ export function DailyOverviewTiles({ selectedDate }: DailyOverviewTilesProps) {
         : 'Belum dicatat',
     },
     {
-      title: 'Sedekah Subuh',
+      title: 'Sedekah',
       icon: Heart,
       completed: task?.sedekah?.completed ?? false,
       summary: task?.sedekah?.completed ? 'Selesai' : 'Belum selesai',

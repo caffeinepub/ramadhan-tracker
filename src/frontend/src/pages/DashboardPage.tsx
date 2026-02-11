@@ -9,13 +9,14 @@ import { DateSelector } from '@/components/dashboard/DateSelector';
 import { DailyContentCarousel } from '@/components/dashboard/DailyContentCarousel';
 import { DailyOverviewTiles } from '@/components/dashboard/DailyOverviewTiles';
 import { DailyProgressBar } from '@/components/dashboard/DailyProgressBar';
+import { PrayerTimesSection } from '@/components/dashboard/PrayerTimesSection';
+import { YesterdayProgressSummary } from '@/components/dashboard/YesterdayProgressSummary';
 import { FastingModule } from '@/components/tracking/FastingModule';
 import { TilawahModule } from '@/components/tracking/TilawahModule';
 import { MurojaahModule } from '@/components/tracking/MurojaahModule';
 import { TahfidzModule } from '@/components/tracking/TahfidzModule';
 import { SedekahModule } from '@/components/tracking/SedekahModule';
 import { SholatModule } from '@/components/tracking/SholatModule';
-import { DownloadCsvCard } from '@/components/reports/DownloadCsvCard';
 import { dateToTimestamp, getTodayTimestamp } from '@/utils/date';
 import { Loader2 } from 'lucide-react';
 
@@ -81,9 +82,14 @@ export default function DashboardPage() {
 
         <DailyContentCarousel />
 
+        <PrayerTimesSection selectedDate={selectedDate} />
+
         <DailyProgressBar selectedDate={selectedDate} />
 
-        <DailyOverviewTiles selectedDate={selectedDate} />
+        <div className="grid gap-4 lg:grid-cols-2">
+          <DailyOverviewTiles selectedDate={selectedDate} />
+          <YesterdayProgressSummary selectedDate={selectedDate} />
+        </div>
 
         <div className="grid gap-4">
           <SholatModule selectedDate={selectedDate} />
@@ -93,8 +99,6 @@ export default function DashboardPage() {
           <TahfidzModule selectedDate={selectedDate} />
           <SedekahModule selectedDate={selectedDate} />
         </div>
-
-        <DownloadCsvCard />
       </div>
 
       <Dialog open={showProfileSetup} onOpenChange={setShowProfileSetup}>

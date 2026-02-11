@@ -12,6 +12,7 @@ import {
   getMonthDays,
 } from '@/utils/month';
 import { MonthlyProgressChart } from '@/components/dashboard/MonthlyProgressChart';
+import { DownloadCsvCard } from '@/components/reports/DownloadCsvCard';
 import type { Task } from '../backend';
 
 export default function MonthlyProgressPage() {
@@ -187,6 +188,8 @@ export default function MonthlyProgressPage() {
           )}
         </CardContent>
       </Card>
+
+      <DownloadCsvCard />
     </div>
   );
 }

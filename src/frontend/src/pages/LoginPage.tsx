@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
 import { useNavigate } from '@tanstack/react-router';
+import { getReturnToPath, clearReturnToPath } from '@/utils/urlParams';
 
 export default function LoginPage() {
   const { login, loginStatus, isAuthenticated } = useAuth();
@@ -11,7 +12,17 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate({ to: '/' });
+      // Check if there's a return-to path stored
+      const returnTo = getReturnToPath();
+      
+      if (returnTo) {
+        // Clear the stored path and navigate to it
+        clearReturnToPath();
+        navigate({ to: returnTo as any });
+      } else {
+        // Default behavior: navigate to dashboard
+        navigate({ to: '/' });
+      }
     }
   }, [isAuthenticated, navigate]);
 

@@ -20,3 +20,9 @@ export function formatDate(date: Date): string {
     day: 'numeric',
   });
 }
+
+export function getPreviousDay(date: Date): Date {
+  const previous = new Date(date);
+  previous.setDate(previous.getDate() - 1);
+  return previous;
+}

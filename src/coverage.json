@@ -1,71 +1,95 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T03:24:09.463Z",
+  "generatedAt": "2026-02-11T06:18:45.035Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
     "total": 4,
-    "implemented": 2,
+    "implemented": 4,
     "items": [
       {
-        "id": "REQ-33",
-        "summary": "Fix the backend admin-bootstrap detection so `promoteToAdmin` correctly determines whether any Admin already exists, even when there are no `userTasks` entries yet (preventing permanent lockout where no one can become Admin).",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-34",
-        "summary": "Add a backend query API that allows the frontend to safely determine whether the canister is in \"bootstrap mode\" (i.e., no Admin exists yet), so the UI can offer a first-admin recovery action only when appropriate.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-35",
-        "summary": "Update the Admin access-denied screen to include an English \"Bootstrap Admin Access\" action that is shown only when the backend reports bootstrap mode, and when clicked attempts to call `promoteToAdmin` for the currently logged-in principal.",
+        "id": "REQ-53",
+        "summary": "Fix the prayer times calculation so displayed times are realistic and match the selected Indonesia timezone (WIB/WITA/WIT), avoiding negative/invalid values and ensuring times fall within 00:00–23:59 for the selected date.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useBackendQueries.ts",
-          "frontend/src/components/auth/AdminAccessDeniedScreen.tsx"
+          "frontend/src/utils/prayerTimes.ts",
+          "frontend/src/hooks/usePrayerTimes.ts",
+          "frontend/src/components/dashboard/PrayerTimesSection.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useBackendQueries.ts",
-          "frontend/src/components/auth/AdminAccessDeniedScreen.tsx"
+          "frontend/src/utils/prayerTimes.ts",
+          "frontend/src/hooks/usePrayerTimes.ts",
+          "frontend/src/components/dashboard/PrayerTimesSection.tsx"
         ]
       },
       {
-        "id": "REQ-36",
-        "summary": "Improve the /admin gate error handling so that if role/admin checks fail (e.g., backend trap/network error), the page shows a clear English error state and a retry action rather than only generic messaging.",
+        "id": "REQ-54",
+        "summary": "Standardize the user-facing language to Bahasa Indonesia for the UI areas affected by this change set: Dashboard header copy, Prayer Times section labels/states, daily overview tiles, yesterday progress summary, and the report download UI.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useAuth.ts",
-          "frontend/src/pages/admin/AdminGatePage.tsx"
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/components/dashboard/PrayerTimesSection.tsx",
+          "frontend/src/components/dashboard/DailyOverviewTiles.tsx",
+          "frontend/src/components/dashboard/YesterdayProgressSummary.tsx",
+          "frontend/src/components/reports/DownloadCsvCard.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useAuth.ts",
-          "frontend/src/pages/admin/AdminGatePage.tsx"
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/components/dashboard/PrayerTimesSection.tsx",
+          "frontend/src/components/dashboard/DailyOverviewTiles.tsx",
+          "frontend/src/components/dashboard/YesterdayProgressSummary.tsx",
+          "frontend/src/components/reports/DownloadCsvCard.tsx"
+        ]
+      },
+      {
+        "id": "REQ-55",
+        "summary": "Improve the Daily Progress (Progres Harian) component UI and behavior so it is visually consistent, handles loading/empty states, and uses the same completion rules as the shared progress utility.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/utils/progress.ts",
+          "frontend/src/components/dashboard/DailyProgressBar.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/utils/progress.ts",
+          "frontend/src/components/dashboard/DailyProgressBar.tsx"
+        ]
+      },
+      {
+        "id": "REQ-56",
+        "summary": "Move the progress report download feature so it is available only on the Monthly Progress page, and remove it from the main Dashboard page.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/pages/MonthlyProgressPage.tsx",
+          "frontend/src/components/reports/DownloadCsvCard.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/pages/MonthlyProgressPage.tsx",
+          "frontend/src/components/reports/DownloadCsvCard.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/auth/AdminAccessDeniedScreen.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useAuth.ts",
-    "frontend/src/hooks/useBackendQueries.ts",
-    "frontend/src/pages/admin/AdminGatePage.tsx",
+    "frontend/src/components/dashboard/DailyOverviewTiles.tsx",
+    "frontend/src/components/dashboard/DailyProgressBar.tsx",
+    "frontend/src/components/dashboard/PrayerTimesSection.tsx",
+    "frontend/src/components/dashboard/YesterdayProgressSummary.tsx",
+    "frontend/src/components/reports/DownloadCsvCard.tsx",
+    "frontend/src/hooks/usePrayerTimes.ts",
+    "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/pages/MonthlyProgressPage.tsx",
+    "frontend/src/utils/prayerTimes.ts",
+    "frontend/src/utils/progress.ts",
+    "frontend/src/utils/urlParams.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

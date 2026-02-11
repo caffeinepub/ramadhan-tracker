@@ -206,3 +206,35 @@ export function getSecretFromHash(paramName: string): string | null {
 export function getSecretParameter(paramName: string): string | null {
     return getSecretFromHash(paramName);
 }
+
+/**
+ * Return-to path management for login flow
+ * Stores the path a user was trying to access before being redirected to login
+ */
+
+const RETURN_TO_PATH_KEY = 'return_to_path';
+
+/**
+ * Stores the path to return to after successful login
+ *
+ * @param path - The path to return to
+ */
+export function setReturnToPath(path: string): void {
+    storeSessionParameter(RETURN_TO_PATH_KEY, path);
+}
+
+/**
+ * Retrieves the stored return-to path
+ *
+ * @returns The stored path if found, null otherwise
+ */
+export function getReturnToPath(): string | null {
+    return getSessionParameter(RETURN_TO_PATH_KEY);
+}
+
+/**
+ * Clears the stored return-to path
+ */
+export function clearReturnToPath(): void {
+    clearSessionParameter(RETURN_TO_PATH_KEY);
+}
