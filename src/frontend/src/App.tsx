@@ -4,6 +4,7 @@ import { AppShell } from './components/layout/AppShell';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import AdminPanelPage from './pages/admin/AdminPanelPage';
+import MonthlyProgressPage from './pages/MonthlyProgressPage';
 import { useAuth } from './hooks/useAuth';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -44,6 +45,18 @@ const dashboardRoute = createRoute({
   },
 });
 
+const monthlyProgressRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/progres-bulanan',
+  component: MonthlyProgressPage,
+  beforeLoad: ({ context }: any) => {
+    const auth = context?.auth;
+    if (!auth?.isAuthenticated) {
+      throw redirect({ to: '/login' });
+    }
+  },
+});
+
 const adminRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/admin',
@@ -59,7 +72,7 @@ const adminRoute = createRoute({
   },
 });
 
-const routeTree = rootRoute.addChildren([loginRoute, dashboardRoute, adminRoute]);
+const routeTree = rootRoute.addChildren([loginRoute, dashboardRoute, monthlyProgressRoute, adminRoute]);
 
 const router = createRouter({
   routeTree,

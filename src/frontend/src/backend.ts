@@ -92,11 +92,22 @@ export class ExternalBlob {
 export interface Sedekah {
     completed: boolean;
     paymentLink?: string;
+    amount?: bigint;
 }
 export interface Murojaah {
     verseStart: bigint;
     surah: string;
     verseEnd: bigint;
+}
+export interface Sholat {
+    asr: boolean;
+    maghrib: boolean;
+    fajr: boolean;
+    isha: boolean;
+    tarawih: boolean;
+    dhuha: boolean;
+    dhuhr: boolean;
+    qiyamulLail: boolean;
 }
 export type Date_ = bigint;
 export interface Tahfidz {
@@ -111,6 +122,7 @@ export interface Tilawah {
 }
 export interface Task {
     murojaah?: Murojaah;
+    sholat?: Sholat;
     tilawah?: Tilawah;
     tahfidz?: Tahfidz;
     fasting?: Fasting;
@@ -139,8 +151,8 @@ export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     createOrUpdateContent(contentType: bigint, content: DailyContent): Promise<void>;
-    createOrUpdateTask(date: Date_, tasks: Task): Promise<void>;
-    createOrUpdateTaskForUser(user: Principal, date: Date_, tasks: Task): Promise<void>;
+    createOrUpdateTask(date: Date_, task: Task): Promise<void>;
+    createOrUpdateTaskForUser(user: Principal, date: Date_, task: Task): Promise<void>;
     createUser(user: Principal, profile: UserProfile): Promise<void>;
     deactivateUser(user: Principal): Promise<void>;
     deleteContent(contentType: bigint): Promise<void>;
@@ -159,6 +171,16 @@ export interface backendInterface {
         fastingDays: bigint;
         tahfidzEntries: bigint;
         murojaahEntries: bigint;
+        sholatStats: {
+            asr: bigint;
+            maghrib: bigint;
+            fajr: bigint;
+            isha: bigint;
+            tarawih: bigint;
+            dhuha: bigint;
+            dhuhr: bigint;
+            qiyamulLail: bigint;
+        };
         sedekahDays: bigint;
     }>;
     isCallerAdmin(): Promise<boolean>;
@@ -167,7 +189,7 @@ export interface backendInterface {
     setSedekahPaymentLink(link: string): Promise<void>;
     updateUserProfile(user: Principal, profile: UserProfile): Promise<void>;
 }
-import type { Date as _Date, Fasting as _Fasting, Murojaah as _Murojaah, Sedekah as _Sedekah, Tahfidz as _Tahfidz, Task as _Task, Tilawah as _Tilawah, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
+import type { Date as _Date, Fasting as _Fasting, Murojaah as _Murojaah, Sedekah as _Sedekah, Sholat as _Sholat, Tahfidz as _Tahfidz, Task as _Task, Tilawah as _Tilawah, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _initializeAccessControlWithSecret(arg0: string): Promise<void> {
@@ -384,28 +406,28 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getTasksInRange(arg0, arg1);
-                return from_candid_vec_n25(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n27(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getTasksInRange(arg0, arg1);
-            return from_candid_vec_n25(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n27(this._uploadFile, this._downloadFile, result);
         }
     }
     async getTasksInRangeForUser(arg0: Principal, arg1: Date_, arg2: Date_): Promise<Array<[Date_, Task]>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getTasksInRangeForUser(arg0, arg1, arg2);
-                return from_candid_vec_n25(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n27(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getTasksInRangeForUser(arg0, arg1, arg2);
-            return from_candid_vec_n25(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n27(this._uploadFile, this._downloadFile, result);
         }
     }
     async getUserProfile(arg0: Principal): Promise<UserProfile | null> {
@@ -427,6 +449,16 @@ export class Backend implements backendInterface {
         fastingDays: bigint;
         tahfidzEntries: bigint;
         murojaahEntries: bigint;
+        sholatStats: {
+            asr: bigint;
+            maghrib: bigint;
+            fajr: bigint;
+            isha: bigint;
+            tarawih: bigint;
+            dhuha: bigint;
+            dhuhr: bigint;
+            qiyamulLail: bigint;
+        };
         sedekahDays: bigint;
     }> {
         if (this.processError) {
@@ -513,11 +545,11 @@ export class Backend implements backendInterface {
         }
     }
 }
-function from_candid_Fasting_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Fasting): Fasting {
-    return from_candid_record_n20(_uploadFile, _downloadFile, value);
+function from_candid_Fasting_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Fasting): Fasting {
+    return from_candid_record_n21(_uploadFile, _downloadFile, value);
 }
-function from_candid_Sedekah_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Sedekah): Sedekah {
-    return from_candid_record_n24(_uploadFile, _downloadFile, value);
+function from_candid_Sedekah_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Sedekah): Sedekah {
+    return from_candid_record_n25(_uploadFile, _downloadFile, value);
 }
 function from_candid_Task_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Task): Task {
     return from_candid_record_n14(_uploadFile, _downloadFile, value);
@@ -531,32 +563,40 @@ function from_candid_opt_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
 function from_candid_opt_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Murojaah]): Murojaah | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Tilawah]): Tilawah | null {
+function from_candid_opt_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Sholat]): Sholat | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Tahfidz]): Tahfidz | null {
+function from_candid_opt_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Tilawah]): Tilawah | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Fasting]): Fasting | null {
-    return value.length === 0 ? null : from_candid_Fasting_n19(_uploadFile, _downloadFile, value[0]);
-}
-function from_candid_opt_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
+function from_candid_opt_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Tahfidz]): Tahfidz | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Sedekah]): Sedekah | null {
-    return value.length === 0 ? null : from_candid_Sedekah_n23(_uploadFile, _downloadFile, value[0]);
+function from_candid_opt_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Fasting]): Fasting | null {
+    return value.length === 0 ? null : from_candid_Fasting_n20(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Sedekah]): Sedekah | null {
+    return value.length === 0 ? null : from_candid_Sedekah_n24(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [bigint]): bigint | null {
+    return value.length === 0 ? null : value[0];
 }
 function from_candid_opt_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
     return value.length === 0 ? null : value[0];
 }
 function from_candid_record_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     murojaah: [] | [_Murojaah];
+    sholat: [] | [_Sholat];
     tilawah: [] | [_Tilawah];
     tahfidz: [] | [_Tahfidz];
     fasting: [] | [_Fasting];
     sedekah: [] | [_Sedekah];
 }): {
     murojaah?: Murojaah;
+    sholat?: Sholat;
     tilawah?: Tilawah;
     tahfidz?: Tahfidz;
     fasting?: Fasting;
@@ -564,13 +604,14 @@ function from_candid_record_n14(_uploadFile: (file: ExternalBlob) => Promise<Uin
 } {
     return {
         murojaah: record_opt_to_undefined(from_candid_opt_n15(_uploadFile, _downloadFile, value.murojaah)),
-        tilawah: record_opt_to_undefined(from_candid_opt_n16(_uploadFile, _downloadFile, value.tilawah)),
-        tahfidz: record_opt_to_undefined(from_candid_opt_n17(_uploadFile, _downloadFile, value.tahfidz)),
-        fasting: record_opt_to_undefined(from_candid_opt_n18(_uploadFile, _downloadFile, value.fasting)),
-        sedekah: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.sedekah))
+        sholat: record_opt_to_undefined(from_candid_opt_n16(_uploadFile, _downloadFile, value.sholat)),
+        tilawah: record_opt_to_undefined(from_candid_opt_n17(_uploadFile, _downloadFile, value.tilawah)),
+        tahfidz: record_opt_to_undefined(from_candid_opt_n18(_uploadFile, _downloadFile, value.tahfidz)),
+        fasting: record_opt_to_undefined(from_candid_opt_n19(_uploadFile, _downloadFile, value.fasting)),
+        sedekah: record_opt_to_undefined(from_candid_opt_n23(_uploadFile, _downloadFile, value.sedekah))
     };
 }
-function from_candid_record_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     note: [] | [string];
     isFasting: boolean;
 }): {
@@ -578,23 +619,26 @@ function from_candid_record_n20(_uploadFile: (file: ExternalBlob) => Promise<Uin
     isFasting: boolean;
 } {
     return {
-        note: record_opt_to_undefined(from_candid_opt_n21(_uploadFile, _downloadFile, value.note)),
+        note: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.note)),
         isFasting: value.isFasting
     };
 }
-function from_candid_record_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     completed: boolean;
     paymentLink: [] | [string];
+    amount: [] | [bigint];
 }): {
     completed: boolean;
     paymentLink?: string;
+    amount?: bigint;
 } {
     return {
         completed: value.completed,
-        paymentLink: record_opt_to_undefined(from_candid_opt_n21(_uploadFile, _downloadFile, value.paymentLink))
+        paymentLink: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.paymentLink)),
+        amount: record_opt_to_undefined(from_candid_opt_n26(_uploadFile, _downloadFile, value.amount))
     };
 }
-function from_candid_tuple_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [_Date, _Task]): [Date_, Task] {
+function from_candid_tuple_n28(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [_Date, _Task]): [Date_, Task] {
     return [
         value[0],
         from_candid_Task_n13(_uploadFile, _downloadFile, value[1])
@@ -609,8 +653,8 @@ function from_candid_variant_n11(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): UserRole {
     return "admin" in value ? UserRole.admin : "user" in value ? UserRole.user : "guest" in value ? UserRole.guest : value;
 }
-function from_candid_vec_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<[_Date, _Task]>): Array<[Date_, Task]> {
-    return value.map((x)=>from_candid_tuple_n26(_uploadFile, _downloadFile, x));
+function from_candid_vec_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<[_Date, _Task]>): Array<[Date_, Task]> {
+    return value.map((x)=>from_candid_tuple_n28(_uploadFile, _downloadFile, x));
 }
 function to_candid_Fasting_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Fasting): _Fasting {
     return to_candid_record_n6(_uploadFile, _downloadFile, value);
@@ -626,12 +670,14 @@ function to_candid_UserRole_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint
 }
 function to_candid_record_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     murojaah?: Murojaah;
+    sholat?: Sholat;
     tilawah?: Tilawah;
     tahfidz?: Tahfidz;
     fasting?: Fasting;
     sedekah?: Sedekah;
 }): {
     murojaah: [] | [_Murojaah];
+    sholat: [] | [_Sholat];
     tilawah: [] | [_Tilawah];
     tahfidz: [] | [_Tahfidz];
     fasting: [] | [_Fasting];
@@ -639,6 +685,7 @@ function to_candid_record_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
 } {
     return {
         murojaah: value.murojaah ? candid_some(value.murojaah) : candid_none(),
+        sholat: value.sholat ? candid_some(value.sholat) : candid_none(),
         tilawah: value.tilawah ? candid_some(value.tilawah) : candid_none(),
         tahfidz: value.tahfidz ? candid_some(value.tahfidz) : candid_none(),
         fasting: value.fasting ? candid_some(to_candid_Fasting_n5(_uploadFile, _downloadFile, value.fasting)) : candid_none(),
@@ -660,13 +707,16 @@ function to_candid_record_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
 function to_candid_record_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     completed: boolean;
     paymentLink?: string;
+    amount?: bigint;
 }): {
     completed: boolean;
     paymentLink: [] | [string];
+    amount: [] | [bigint];
 } {
     return {
         completed: value.completed,
-        paymentLink: value.paymentLink ? candid_some(value.paymentLink) : candid_none()
+        paymentLink: value.paymentLink ? candid_some(value.paymentLink) : candid_none(),
+        amount: value.amount ? candid_some(value.amount) : candid_none()
     };
 }
 function to_candid_variant_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): {

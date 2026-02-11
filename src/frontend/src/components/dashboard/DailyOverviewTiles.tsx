@@ -1,7 +1,7 @@
 import { useGetTask } from '@/hooks/useBackendQueries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, Circle, BookOpen, BookMarked, GraduationCap, Heart } from 'lucide-react';
+import { CheckCircle2, Circle, BookOpen, BookMarked, GraduationCap, Heart, Moon } from 'lucide-react';
 import { dateToTimestamp } from '@/utils/date';
 
 interface DailyOverviewTilesProps {
@@ -12,12 +12,22 @@ export function DailyOverviewTiles({ selectedDate }: DailyOverviewTilesProps) {
   const timestamp = dateToTimestamp(selectedDate);
   const { data: task, isLoading } = useGetTask(timestamp);
 
+  const fiveWajibComplete = task?.sholat?.fajr && task?.sholat?.dhuhr && task?.sholat?.asr && task?.sholat?.maghrib && task?.sholat?.isha;
+  const wajibCount = [task?.sholat?.fajr, task?.sholat?.dhuhr, task?.sholat?.asr, task?.sholat?.maghrib, task?.sholat?.isha].filter(Boolean).length;
+  const sunnahCount = [task?.sholat?.dhuha, task?.sholat?.tarawih, task?.sholat?.qiyamulLail].filter(Boolean).length;
+
   const tiles = [
     {
-      title: 'Fasting',
+      title: 'Sholat',
+      icon: Moon,
+      completed: fiveWajibComplete ?? false,
+      summary: `${wajibCount}/5 wajib${sunnahCount > 0 ? `, +${sunnahCount} sunnah` : ''}`,
+    },
+    {
+      title: 'Puasa',
       icon: Circle,
       completed: task?.fasting?.isFasting ?? false,
-      summary: task?.fasting?.isFasting ? 'Completed' : 'Not completed',
+      summary: task?.fasting?.isFasting ? 'Selesai' : 'Belum selesai',
     },
     {
       title: 'Tilawah',
@@ -25,7 +35,7 @@ export function DailyOverviewTiles({ selectedDate }: DailyOverviewTilesProps) {
       completed: task?.tilawah !== undefined && task?.tilawah !== null,
       summary: task?.tilawah
         ? `${task.tilawah.surah} (${task.tilawah.verseStart}-${task.tilawah.verseEnd})`
-        : 'Not recorded',
+        : 'Belum dicatat',
     },
     {
       title: 'Murojaah',
@@ -33,7 +43,7 @@ export function DailyOverviewTiles({ selectedDate }: DailyOverviewTilesProps) {
       completed: task?.murojaah !== undefined && task?.murojaah !== null,
       summary: task?.murojaah
         ? `${task.murojaah.surah} (${task.murojaah.verseStart}-${task.murojaah.verseEnd})`
-        : 'Not recorded',
+        : 'Belum dicatat',
     },
     {
       title: 'Tahfidz',
@@ -41,20 +51,20 @@ export function DailyOverviewTiles({ selectedDate }: DailyOverviewTilesProps) {
       completed: task?.tahfidz !== undefined && task?.tahfidz !== null,
       summary: task?.tahfidz
         ? `${task.tahfidz.surah} (${task.tahfidz.verseStart}-${task.tahfidz.verseEnd})`
-        : 'Not recorded',
+        : 'Belum dicatat',
     },
     {
       title: 'Sedekah Subuh',
       icon: Heart,
       completed: task?.sedekah?.completed ?? false,
-      summary: task?.sedekah?.completed ? 'Completed' : 'Not completed',
+      summary: task?.sedekah?.completed ? 'Selesai' : 'Belum selesai',
     },
   ];
 
   if (isLoading) {
     return (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {[...Array(5)].map((_, i) => (
+        {[...Array(6)].map((_, i) => (
           <Card key={i} className="animate-pulse">
             <CardHeader className="pb-3">
               <div className="h-4 bg-muted rounded w-24" />

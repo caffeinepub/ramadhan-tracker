@@ -8,16 +8,16 @@ export default function AdminPanelPage() {
   return (
     <div className="container max-w-6xl mx-auto px-4 py-6 space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Admin Panel</h1>
-        <p className="text-muted-foreground">Manage users, content, and view statistics</p>
+        <h1 className="text-3xl font-bold">Panel Admin</h1>
+        <p className="text-muted-foreground">Kelola pengguna, konten, dan lihat statistik</p>
       </div>
 
       <Tabs defaultValue="users" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="users">Users</TabsTrigger>
-          <TabsTrigger value="content">Content</TabsTrigger>
-          <TabsTrigger value="statistics">Statistics</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsTrigger value="users">Pengguna</TabsTrigger>
+          <TabsTrigger value="content">Konten</TabsTrigger>
+          <TabsTrigger value="statistics">Statistik</TabsTrigger>
+          <TabsTrigger value="settings">Pengaturan</TabsTrigger>
         </TabsList>
 
         <TabsContent value="users" className="mt-6">

@@ -2,10 +2,17 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-make-the-dashboard-daily-content-carousel-render-a-visible-empty-state-when-no-daily-content-exists-instead-of-rendering-nothing",
-      "featureTitle": "Make the Dashboard daily content carousel render a visible empty state when no daily content exists, instead of rendering nothing.",
+      "featureId": "feature-fix-daily-tracking-persistence-so-that-after-a-user-records-any-daily-progress-sholat-fasting-tilawah-murojaah-tahfidz-sedekah-and-then-closes-exits-the-web-app-tab-close-refresh-reopen-the-previously-saved-values-are-reliably-loaded-from-the-backend-for-the-same-selected-date-no-need-to-re-mark-from-scratch",
+      "featureTitle": "Fix daily tracking persistence so that after a user records any daily progress (sholat, fasting, tilawah, murojaah, tahfidz, sedekah) and then closes/exits the web app (tab close, refresh, reopen), the previously saved values are reliably loaded from the backend for the same selected date (no need to re-mark from scratch).",
       "files": [
-        "frontend/src/components/dashboard/DailyContentCarousel.tsx"
+        "frontend/src/components/tracking/FastingModule.tsx",
+        "frontend/src/components/tracking/MurojaahModule.tsx",
+        "frontend/src/components/tracking/SedekahModule.tsx",
+        "frontend/src/components/tracking/SholatModule.tsx",
+        "frontend/src/components/tracking/TahfidzModule.tsx",
+        "frontend/src/components/tracking/TilawahModule.tsx",
+        "frontend/src/hooks/useBackendQueries.ts",
+        "frontend/src/pages/DashboardPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -16,16 +23,16 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-17"
+        "REQ-27"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-basic-diagnostics-for-the-daily-content-query-failure-path-so-the-ui-does-not-silently-hide-the-daily-content-section-when-the-fetch-fails-e-g-show-a-small-error-state-message-in-english",
-      "featureTitle": "Add basic diagnostics for the daily content query failure path so the UI does not silently hide the daily content section when the fetch fails (e.g., show a small error state message in English).",
+      "featureId": "feature-replace-the-monthly-progress-bar-visualization-with-a-line-chart-svg-based-so-the-monthly-progress-page-shows-a-line-only-chart-for-daily-percentage-progress-instead-of-vertical-bars",
+      "featureTitle": "Replace the monthly progress “bar” visualization with a line chart (SVG-based) so the monthly progress page shows a line-only chart for daily percentage progress instead of vertical bars.",
       "files": [
-        "frontend/src/components/dashboard/DailyContentCarousel.tsx",
-        "frontend/src/hooks/useBackendQueries.ts"
+        "frontend/src/components/dashboard/MonthlyProgressChart.tsx",
+        "frontend/src/pages/MonthlyProgressPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -36,7 +43,33 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-19"
+        "REQ-28"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-any-affected-loading-error-empty-ui-states-introduced-or-modified-by-these-changes-to-use-english-user-facing-text-in-the-modified-components-pages",
+      "featureTitle": "Update any affected loading/error/empty UI states introduced or modified by these changes to use English user-facing text in the modified components/pages.",
+      "files": [
+        "frontend/src/components/tracking/FastingModule.tsx",
+        "frontend/src/components/tracking/MurojaahModule.tsx",
+        "frontend/src/components/tracking/SedekahModule.tsx",
+        "frontend/src/components/tracking/SholatModule.tsx",
+        "frontend/src/components/tracking/TahfidzModule.tsx",
+        "frontend/src/components/tracking/TilawahModule.tsx",
+        "frontend/src/pages/DashboardPage.tsx",
+        "frontend/src/pages/MonthlyProgressPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-29"
       ],
       "confidence": "high"
     }

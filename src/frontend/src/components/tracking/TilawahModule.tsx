@@ -39,17 +39,21 @@ export function TilawahModule({ selectedDate }: TilawahModuleProps) {
       await updateTask.mutateAsync({
         date: timestamp,
         task: {
-          ...task,
+          fasting: task?.fasting,
           tilawah: {
             surah: surah.trim(),
             verseStart: BigInt(verseStart),
             verseEnd: BigInt(verseEnd),
           },
+          murojaah: task?.murojaah,
+          tahfidz: task?.tahfidz,
+          sedekah: task?.sedekah,
+          sholat: task?.sholat,
         },
       });
       toast.success('Tilawah saved');
     } catch (error) {
-      toast.error('Failed to save tilawah');
+      toast.error('Failed to save Tilawah');
     }
   };
 
@@ -60,17 +64,17 @@ export function TilawahModule({ selectedDate }: TilawahModuleProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="tilawah-surah">Surah Name</Label>
+          <Label htmlFor="tilawah-surah">Nama Surah</Label>
           <Input
             id="tilawah-surah"
             value={surah}
             onChange={(e) => setSurah(e.target.value)}
-            placeholder="e.g., Al-Baqarah"
+            placeholder="contoh: Al-Baqarah"
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="tilawah-start">Verse From</Label>
+            <Label htmlFor="tilawah-start">Ayat Dari</Label>
             <Input
               id="tilawah-start"
               type="number"
@@ -81,7 +85,7 @@ export function TilawahModule({ selectedDate }: TilawahModuleProps) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="tilawah-end">Verse To</Label>
+            <Label htmlFor="tilawah-end">Ayat Sampai</Label>
             <Input
               id="tilawah-end"
               type="number"
@@ -99,7 +103,7 @@ export function TilawahModule({ selectedDate }: TilawahModuleProps) {
               Saving...
             </>
           ) : (
-            'Save Tilawah'
+            'Simpan Tilawah'
           )}
         </Button>
       </CardContent>

@@ -92,8 +92,10 @@ export function useCreateOrUpdateTask() {
       return actor.createOrUpdateTask(date, task);
     },
     onSuccess: (_, variables) => {
+      // Immediately refetch the specific task to ensure UI is in sync
       queryClient.invalidateQueries({ queryKey: ['task', variables.date.toString()] });
       queryClient.invalidateQueries({ queryKey: ['tasksInRange'] });
+      queryClient.invalidateQueries({ queryKey: ['task'] });
     },
   });
 }

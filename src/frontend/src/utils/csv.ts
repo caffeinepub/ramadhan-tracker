@@ -3,26 +3,42 @@ import { timestampToDate } from './date';
 
 export function generateCsv(tasks: [Date_, Task][]): string {
   const headers = [
-    'Date',
-    'Fasting',
-    'Fasting Note',
+    'Tanggal',
+    'Subuh',
+    'Zuhur',
+    'Ashar',
+    'Maghrib',
+    'Isya',
+    'Dhuha',
+    'Tarawih',
+    'Qiyamul Lail',
+    'Puasa',
+    'Catatan Puasa',
     'Tilawah Surah',
-    'Tilawah From',
-    'Tilawah To',
+    'Tilawah Dari',
+    'Tilawah Sampai',
     'Murojaah Surah',
-    'Murojaah From',
-    'Murojaah To',
+    'Murojaah Dari',
+    'Murojaah Sampai',
     'Tahfidz Surah',
-    'Tahfidz From',
-    'Tahfidz To',
+    'Tahfidz Dari',
+    'Tahfidz Sampai',
     'Sedekah',
   ];
 
   const rows = tasks.map(([date, task]) => {
     const dateObj = timestampToDate(date);
     return [
-      dateObj.toLocaleDateString(),
-      task.fasting?.isFasting ? 'Yes' : 'No',
+      dateObj.toLocaleDateString('id-ID'),
+      task.sholat?.fajr ? 'Ya' : 'Tidak',
+      task.sholat?.dhuhr ? 'Ya' : 'Tidak',
+      task.sholat?.asr ? 'Ya' : 'Tidak',
+      task.sholat?.maghrib ? 'Ya' : 'Tidak',
+      task.sholat?.isha ? 'Ya' : 'Tidak',
+      task.sholat?.dhuha ? 'Ya' : 'Tidak',
+      task.sholat?.tarawih ? 'Ya' : 'Tidak',
+      task.sholat?.qiyamulLail ? 'Ya' : 'Tidak',
+      task.fasting?.isFasting ? 'Ya' : 'Tidak',
       task.fasting?.note || '',
       task.tilawah?.surah || '',
       task.tilawah?.verseStart?.toString() || '',
@@ -33,7 +49,7 @@ export function generateCsv(tasks: [Date_, Task][]): string {
       task.tahfidz?.surah || '',
       task.tahfidz?.verseStart?.toString() || '',
       task.tahfidz?.verseEnd?.toString() || '',
-      task.sedekah?.completed ? 'Yes' : 'No',
+      task.sedekah?.completed ? 'Ya' : 'Tidak',
     ];
   });
 

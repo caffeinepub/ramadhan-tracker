@@ -1,17 +1,20 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
-  "summary": "Mobile-first web app “Ramadhan Tracker” for personal worship tracking during Ramadhan, with admin-created accounts (no self-signup), user dashboard, daily tracking modules (puasa, tilawah, murojaah, tahfidz, sedekah subuh), rotating Islamic content slides managed by admin, downloadable progress reports (PDF/CSV), and a full admin panel for user/content management and statistics.",
+  "projectStateVersion": 13,
+  "summary": "Mobile-first web app “Ramadhan Tracker” for personal worship tracking during Ramadhan, with admin-created accounts (no self-signup), user dashboard, daily tracking modules (puasa, tilawah, murojaah, tahfidz, sedekah subuh, and sholat), rotating Islamic content slides managed by admin, downloadable progress reports (PDF/CSV), full admin panel for user/content management and statistics, and UI language updated to Bahasa Indonesia.",
   "architectural_notes": [
     "No public self-registration; all user accounts provisioned by admin.",
     "Role-based access control (Admin vs User) with users restricted to their own data.",
     "Store tracking data per user per date to support dashboard summaries, filtering, and reporting.",
     "Separate API surfaces/permissions for admin operations vs user operations.",
     "Default/configured Sedekah Subuh donation button should open: https://tribelio.page/site/donation/9U7UPN3Y (still admin-configurable).",
-    "Daily motivation slide content types include: tadabbur (Quran reflection), hadits, and Islamic quotes."
+    "Daily motivation slide content types include: tadabbur (Quran reflection), hadits, and Islamic quotes.",
+    "Bahasa aplikasi diubah menjadi Bahasa Indonesia (UI copy/label/empty state/error message)."
   ],
   "known_issues": [
-    "Daily motivation slides/carousel (Tadabbur, Hadith, Islamic Quote) feature is not appearing in the live app/UI despite being added."
+    "Daily motivation slides/carousel (Tadabbur, Hadith, Islamic Quote) feature is not appearing in the live app/UI despite being added.",
+    "Fitur save progress (penyimpanan progres/rekaman tracking harian) tidak berjalan.",
+    "Progres harian tidak tersimpan setelah user keluar/menutup web app; user harus menandai ulang dari awal."
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -150,6 +153,86 @@
         "REQ-19"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-ui-language-to-bahasa-indonesia-for-all-user-facing-strings-across-the-dashboard-tracking-modules-admin-pages-and-reports-including-button-labels-form-labels-empty-error-states-toasts-and-tile-progress-text",
+      "title": "Update the frontend UI language to Bahasa Indonesia for all user-facing strings across the dashboard, tracking modules, admin pages, and reports (including button labels, form labels, empty/error states, toasts, and tile/progress text).",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-daily-tracking-save-progress-functionality-so-that-saving-any-module-fasting-tilawah-murojaah-tahfidz-sedekah-reliably-persists-to-the-backend-for-the-selected-date-and-does-not-throw-runtime-errors-when-no-existing-task-exists-yet-for-that-date",
+      "title": "Fix the daily tracking 'save progress' functionality so that saving any module (fasting/tilawah/murojaah/tahfidz/sedekah) reliably persists to the backend for the selected date and does not throw runtime errors when no existing Task exists yet for that date.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-sholat-prayer-tracking-stored-per-user-per-date-covering-the-5-daily-prayers-fajr-subuh-dhuhr-zuhur-asr-ashar-maghrib-isha-isya-plus-optional-prayers-dhuha-tarawih-qiyamul-lail",
+      "title": "Implement sholat (prayer) tracking stored per-user per-date, covering: the 5 daily prayers (Fajr/Subuh, Dhuhr/Zuhur, Asr/Ashar, Maghrib, Isha/Isya) plus optional prayers (Dhuha, Tarawih, Qiyamul Lail).",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-progress-reporting-to-correctly-download-a-csv-using-actual-backend-data-remove-placeholder-fetch-to-api-tasks-in-range-and-include-the-new-sholat-fields-as-additional-columns",
+      "title": "Update progress reporting to correctly download a CSV using actual backend data (remove placeholder fetch to '/api/tasks-in-range') and include the new sholat fields as additional columns.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-authenticated-dashboard-page-that-shows-the-logged-in-user-s-progress-for-a-selected-month-as-a-graph-using-existing-per-day-task-data",
+      "title": "Add a new authenticated dashboard page that shows the logged-in user’s progress for a selected month as a graph, using existing per-day task data.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-navigation-to-the-new-monthly-progress-page-from-the-authenticated-app-shell-e-g-add-a-menu-item-in-the-user-dropdown-in-the-header",
+      "title": "Add navigation to the new monthly progress page from the authenticated app shell (e.g., add a menu item in the user dropdown in the header).",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-all-new-ui-strings-added-for-the-monthly-progress-feature-follow-the-app-s-existing-localization-convention-the-app-currently-uses-bahasa-indonesia-and-add-appropriate-loading-and-error-states-for-the-monthly-data-query",
+      "title": "Ensure all new UI strings added for the monthly progress feature follow the app’s existing localization convention (the app currently uses Bahasa Indonesia), and add appropriate loading and error states for the monthly data query.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-daily-tracking-persistence-so-that-after-a-user-records-any-daily-progress-sholat-fasting-tilawah-murojaah-tahfidz-sedekah-and-then-closes-exits-the-web-app-tab-close-refresh-reopen-the-previously-saved-values-are-reliably-loaded-from-the-backend-for-the-same-selected-date-no-need-to-re-mark-from-scratch",
+      "title": "Fix daily tracking persistence so that after a user records any daily progress (sholat, fasting, tilawah, murojaah, tahfidz, sedekah) and then closes/exits the web app (tab close, refresh, reopen), the previously saved values are reliably loaded from the backend for the same selected date (no need to re-mark from scratch).",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-monthly-progress-bar-visualization-with-a-line-chart-svg-based-so-the-monthly-progress-page-shows-a-line-only-chart-for-daily-percentage-progress-instead-of-vertical-bars",
+      "title": "Replace the monthly progress “bar” visualization with a line chart (SVG-based) so the monthly progress page shows a line-only chart for daily percentage progress instead of vertical bars.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-any-affected-loading-error-empty-ui-states-introduced-or-modified-by-these-changes-to-use-english-user-facing-text-in-the-modified-components-pages",
+      "title": "Update any affected loading/error/empty UI states introduced or modified by these changes to use English user-facing text in the modified components/pages.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -239,6 +322,24 @@
       "reqIds": [
         "REQ-18"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Tambahkan tracking sholat: sholat 5 waktu, Dhuha, Tarawih, dan Qiyamul Lail (tersimpan per user per tanggal dan tampil di dashboard/laporan).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-30",
+      "summary": "Tambahkan dashboard/halaman yang menampilkan progress pengguna dalam 1 bulan dengan visualisasi grafik (monthly progress chart).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-31",
+      "summary": "Ubah visualisasi di dashboard statistik/progress: jangan pakai bar chart (balok), gunakan line chart (chart garis) saja.",
+      "reqIds": [],
       "status": "pending"
     }
   ],

@@ -39,13 +39,13 @@ export function DailyContentCarousel() {
     return (
       <Card className="bg-gradient-to-br from-primary/5 to-accent/5">
         <CardHeader>
-          <CardTitle className="text-lg">Daily Content</CardTitle>
+          <CardTitle className="text-lg">Konten Harian</CardTitle>
         </CardHeader>
         <CardContent>
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              Failed to load daily content. Please try refreshing the page.
+              Gagal memuat konten harian. Silakan coba muat ulang halaman.
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -58,13 +58,13 @@ export function DailyContentCarousel() {
     return (
       <Card className="bg-gradient-to-br from-primary/5 to-accent/5">
         <CardHeader>
-          <CardTitle className="text-lg">Daily Content</CardTitle>
+          <CardTitle className="text-lg">Konten Harian</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center text-center space-y-3 py-8">
             <BookOpen className="h-12 w-12 text-muted-foreground/50" />
             <p className="text-muted-foreground">
-              No daily content yet. Ask an admin to add Tadabbur, Hadith, and Islamic Quote in the Admin Panel.
+              Belum ada konten harian. Minta admin untuk menambahkan Tadabbur, Hadits, dan Kutipan Islami di Panel Admin.
             </p>
           </div>
         </CardContent>
@@ -77,11 +77,11 @@ export function DailyContentCarousel() {
     return (
       <Card className="bg-gradient-to-br from-primary/5 to-accent/5">
         <CardHeader>
-          <CardTitle className="text-lg">Daily Content</CardTitle>
+          <CardTitle className="text-lg">Konten Harian</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
-            <div className="animate-pulse text-muted-foreground">Loading daily content...</div>
+            <div className="animate-pulse text-muted-foreground">Memuat konten harian...</div>
           </div>
         </CardContent>
       </Card>
@@ -90,8 +90,8 @@ export function DailyContentCarousel() {
 
   const slides = contents.flatMap((content) => [
     { type: 'Tadabbur', text: content.quranReflection, icon: BookOpen },
-    { type: 'Hadith', text: content.hadith, icon: Scroll },
-    { type: 'Islamic Quote', text: content.motivation, icon: Sparkles },
+    { type: 'Hadits', text: content.hadith, icon: Scroll },
+    { type: 'Kutipan Islami', text: content.motivation, icon: Sparkles },
   ]);
 
   return (

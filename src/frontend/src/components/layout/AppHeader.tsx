@@ -1,7 +1,7 @@
 import { useAuth } from '@/hooks/useAuth';
 import { useGetCallerUserProfile } from '@/hooks/useBackendQueries';
 import { Button } from '@/components/ui/button';
-import { Moon, Sun, LogOut, User, Shield } from 'lucide-react';
+import { Moon, Sun, LogOut, User, Shield, TrendingUp } from 'lucide-react';
 import { useTheme } from '../theme/ThemeProvider';
 import { useNavigate } from '@tanstack/react-router';
 import {
@@ -26,7 +26,7 @@ export function AppHeader() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-semibold text-primary">Ramadhan Tracker</h1>
+          <h1 className="text-xl font-semibold text-primary">Pelacak Ramadhan</h1>
         </div>
 
         <div className="flex items-center gap-2">
@@ -42,23 +42,30 @@ export function AppHeader() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="gap-2">
                 <User className="h-4 w-4" />
-                <span className="hidden sm:inline">{userProfile?.name || 'User'}</span>
+                <span className="hidden sm:inline">{userProfile?.name || 'Pengguna'}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => navigate({ to: '/' })}>
-                Dashboard
+                Dasbor
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate({ to: '/progres-bulanan' })}>
+                <TrendingUp className="mr-2 h-4 w-4" />
+                Progres Bulanan
               </DropdownMenuItem>
               {isAdmin && (
-                <DropdownMenuItem onClick={() => navigate({ to: '/admin' })}>
-                  <Shield className="mr-2 h-4 w-4" />
-                  Admin Panel
-                </DropdownMenuItem>
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate({ to: '/admin' })}>
+                    <Shield className="mr-2 h-4 w-4" />
+                    Panel Admin
+                  </DropdownMenuItem>
+                </>
               )}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout}>
                 <LogOut className="mr-2 h-4 w-4" />
-                Logout
+                Keluar
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

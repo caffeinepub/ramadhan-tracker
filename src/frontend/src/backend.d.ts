@@ -10,11 +10,22 @@ export type Option<T> = Some<T> | None;
 export interface Sedekah {
     completed: boolean;
     paymentLink?: string;
+    amount?: bigint;
 }
 export interface Murojaah {
     verseStart: bigint;
     surah: string;
     verseEnd: bigint;
+}
+export interface Sholat {
+    asr: boolean;
+    maghrib: boolean;
+    fajr: boolean;
+    isha: boolean;
+    tarawih: boolean;
+    dhuha: boolean;
+    dhuhr: boolean;
+    qiyamulLail: boolean;
 }
 export type Date_ = bigint;
 export interface Tahfidz {
@@ -29,6 +40,7 @@ export interface Tilawah {
 }
 export interface Task {
     murojaah?: Murojaah;
+    sholat?: Sholat;
     tilawah?: Tilawah;
     tahfidz?: Tahfidz;
     fasting?: Fasting;
@@ -56,8 +68,8 @@ export enum UserRole {
 export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     createOrUpdateContent(contentType: bigint, content: DailyContent): Promise<void>;
-    createOrUpdateTask(date: Date_, tasks: Task): Promise<void>;
-    createOrUpdateTaskForUser(user: Principal, date: Date_, tasks: Task): Promise<void>;
+    createOrUpdateTask(date: Date_, task: Task): Promise<void>;
+    createOrUpdateTaskForUser(user: Principal, date: Date_, task: Task): Promise<void>;
     createUser(user: Principal, profile: UserProfile): Promise<void>;
     deactivateUser(user: Principal): Promise<void>;
     deleteContent(contentType: bigint): Promise<void>;
@@ -76,6 +88,16 @@ export interface backendInterface {
         fastingDays: bigint;
         tahfidzEntries: bigint;
         murojaahEntries: bigint;
+        sholatStats: {
+            asr: bigint;
+            maghrib: bigint;
+            fajr: bigint;
+            isha: bigint;
+            tarawih: bigint;
+            dhuha: bigint;
+            dhuhr: bigint;
+            qiyamulLail: bigint;
+        };
         sedekahDays: bigint;
     }>;
     isCallerAdmin(): Promise<boolean>;

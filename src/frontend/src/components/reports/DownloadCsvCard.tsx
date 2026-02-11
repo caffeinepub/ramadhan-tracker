@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useGetTasksInRange } from '@/hooks/useBackendQueries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -8,15 +7,17 @@ import { dateToTimestamp } from '@/utils/date';
 import { generateCsv } from '@/utils/csv';
 import { Download, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useActor } from '@/hooks/useActor';
 
 export function DownloadCsvCard() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
+  const { actor } = useActor();
 
   const handleDownload = async () => {
     if (!startDate || !endDate) {
-      toast.error('Please select both start and end dates');
+      toast.error('Silakan pilih tanggal mulai dan tanggal akhir');
       return;
     }
 
@@ -24,7 +25,12 @@ export function DownloadCsvCard() {
     const end = new Date(endDate);
 
     if (start > end) {
-      toast.error('Start date must be before end date');
+      toast.error('Tanggal mulai harus sebelum tanggal akhir');
+      return;
+    }
+
+    if (!actor) {
+      toast.error('Backend tidak tersedia');
       return;
     }
 
@@ -33,32 +39,23 @@ export function DownloadCsvCard() {
       const startTimestamp = dateToTimestamp(start);
       const endTimestamp = dateToTimestamp(end);
 
-      // Fetch data using the hook manually
-      const response = await fetch('/api/tasks-in-range', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ startDate: startTimestamp, endDate: endTimestamp }),
-      });
-
-      // For now, we'll use a simpler approach with the hook
-      // This is a workaround - ideally we'd fetch the data here
-      toast.info('Generating CSV...');
+      const tasks = await actor.getTasksInRange(startTimestamp, endTimestamp);
       
-      // Generate empty CSV for now - this needs backend data
-      const csv = generateCsv([]);
-      const blob = new Blob([csv], { type: 'text/csv' });
+      const csv = generateCsv(tasks);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `ramadhan-progress-${startDate}-to-${endDate}.csv`;
+      a.download = `laporan-ramadhan-${startDate}-sampai-${endDate}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      toast.success('CSV downloaded successfully');
+      toast.success('CSV berhasil diunduh');
     } catch (error) {
-      toast.error('Failed to download CSV');
+      console.error('Download error:', error);
+      toast.error('Gagal mengunduh CSV');
     } finally {
       setIsDownloading(false);
     }
@@ -67,12 +64,12 @@ export function DownloadCsvCard() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Download Progress Report</CardTitle>
+        <CardTitle>Unduh Laporan Progres</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="start-date">Start Date</Label>
+            <Label htmlFor="start-date">Tanggal Mulai</Label>
             <Input
               id="start-date"
               type="date"
@@ -81,7 +78,7 @@ export function DownloadCsvCard() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="end-date">End Date</Label>
+            <Label htmlFor="end-date">Tanggal Akhir</Label>
             <Input
               id="end-date"
               type="date"
@@ -94,12 +91,12 @@ export function DownloadCsvCard() {
           {isDownloading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Generating...
+              Menghasilkan...
             </>
           ) : (
             <>
               <Download className="mr-2 h-4 w-4" />
-              Download CSV
+              Unduh CSV
             </>
           )}
         </Button>

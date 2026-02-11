@@ -24,6 +24,16 @@ export const Murojaah = IDL.Record({
   'surah' : IDL.Text,
   'verseEnd' : IDL.Nat,
 });
+export const Sholat = IDL.Record({
+  'asr' : IDL.Bool,
+  'maghrib' : IDL.Bool,
+  'fajr' : IDL.Bool,
+  'isha' : IDL.Bool,
+  'tarawih' : IDL.Bool,
+  'dhuha' : IDL.Bool,
+  'dhuhr' : IDL.Bool,
+  'qiyamulLail' : IDL.Bool,
+});
 export const Tilawah = IDL.Record({
   'verseStart' : IDL.Nat,
   'surah' : IDL.Text,
@@ -41,9 +51,11 @@ export const Fasting = IDL.Record({
 export const Sedekah = IDL.Record({
   'completed' : IDL.Bool,
   'paymentLink' : IDL.Opt(IDL.Text),
+  'amount' : IDL.Opt(IDL.Nat),
 });
 export const Task = IDL.Record({
   'murojaah' : IDL.Opt(Murojaah),
+  'sholat' : IDL.Opt(Sholat),
   'tilawah' : IDL.Opt(Tilawah),
   'tahfidz' : IDL.Opt(Tahfidz),
   'fasting' : IDL.Opt(Fasting),
@@ -98,6 +110,16 @@ export const idlService = IDL.Service({
           'fastingDays' : IDL.Nat,
           'tahfidzEntries' : IDL.Nat,
           'murojaahEntries' : IDL.Nat,
+          'sholatStats' : IDL.Record({
+            'asr' : IDL.Nat,
+            'maghrib' : IDL.Nat,
+            'fajr' : IDL.Nat,
+            'isha' : IDL.Nat,
+            'tarawih' : IDL.Nat,
+            'dhuha' : IDL.Nat,
+            'dhuhr' : IDL.Nat,
+            'qiyamulLail' : IDL.Nat,
+          }),
           'sedekahDays' : IDL.Nat,
         }),
       ],
@@ -129,6 +151,16 @@ export const idlFactory = ({ IDL }) => {
     'surah' : IDL.Text,
     'verseEnd' : IDL.Nat,
   });
+  const Sholat = IDL.Record({
+    'asr' : IDL.Bool,
+    'maghrib' : IDL.Bool,
+    'fajr' : IDL.Bool,
+    'isha' : IDL.Bool,
+    'tarawih' : IDL.Bool,
+    'dhuha' : IDL.Bool,
+    'dhuhr' : IDL.Bool,
+    'qiyamulLail' : IDL.Bool,
+  });
   const Tilawah = IDL.Record({
     'verseStart' : IDL.Nat,
     'surah' : IDL.Text,
@@ -146,9 +178,11 @@ export const idlFactory = ({ IDL }) => {
   const Sedekah = IDL.Record({
     'completed' : IDL.Bool,
     'paymentLink' : IDL.Opt(IDL.Text),
+    'amount' : IDL.Opt(IDL.Nat),
   });
   const Task = IDL.Record({
     'murojaah' : IDL.Opt(Murojaah),
+    'sholat' : IDL.Opt(Sholat),
     'tilawah' : IDL.Opt(Tilawah),
     'tahfidz' : IDL.Opt(Tahfidz),
     'fasting' : IDL.Opt(Fasting),
@@ -203,6 +237,16 @@ export const idlFactory = ({ IDL }) => {
             'fastingDays' : IDL.Nat,
             'tahfidzEntries' : IDL.Nat,
             'murojaahEntries' : IDL.Nat,
+            'sholatStats' : IDL.Record({
+              'asr' : IDL.Nat,
+              'maghrib' : IDL.Nat,
+              'fajr' : IDL.Nat,
+              'isha' : IDL.Nat,
+              'tarawih' : IDL.Nat,
+              'dhuha' : IDL.Nat,
+              'dhuhr' : IDL.Nat,
+              'qiyamulLail' : IDL.Nat,
+            }),
             'sedekahDays' : IDL.Nat,
           }),
         ],

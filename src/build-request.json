@@ -1,70 +1,69 @@
 {
   "kind": "build_request",
-  "title": "Fix missing Daily Content (Tadabbur/Hadith/Islamic Quote) slides on Dashboard",
-  "priority": "normal",
+  "title": "Fix daily progress persistence on app exit and switch statistics visualization to line chart",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-17",
-      "text": "Make the Dashboard daily content carousel render a visible empty state when no daily content exists, instead of rendering nothing.",
-      "target": "frontend",
+      "id": "REQ-27",
+      "text": "Fix daily tracking persistence so that after a user records any daily progress (sholat, fasting, tilawah, murojaah, tahfidz, sedekah) and then closes/exits the web app (tab close, refresh, reopen), the previously saved values are reliably loaded from the backend for the same selected date (no need to re-mark from scratch).",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-6"
         ],
         "quotes": [
-          "fitur tambahkan slide untuk tampilkan motivasi harian (tadabbur, hadits, qoute islami) belum muncul"
+          "progres harian ketika habis  keluar dari web app datanya tidak tersimpan, harus mengulang menandai dari  awal lagi"
         ]
       },
       "acceptanceCriteria": [
-        "When `getContents()` returns an empty array, the Dashboard still shows a Daily Content section (card) with an English empty-state message (e.g., 'No daily content yet. Ask an admin to add Tadabbur, Hadith, and Islamic Quote in the Admin Panel.').",
-        "When `getContents()` returns at least one content item, the carousel renders and auto-rotates through the three labeled slide types: 'Tadabbur', 'Hadith', and 'Islamic Quote'."
+        "Given a user updates any module and sees a success confirmation, when the user refreshes the page or closes and reopens the app, the same date’s data is fetched and rendered with the saved values.",
+        "Updates that are in-flight when the user leaves the page do not silently get lost: the UI either completes the save reliably or informs the user that saving is still in progress / failed (so they can retry).",
+        "No module overwrites other modules’ already-saved fields for the same date (partial updates must preserve existing fields).",
+        "No runtime errors occur when saving on a date that previously had no Task record."
       ]
     },
     {
-      "id": "REQ-18",
-      "text": "Ensure the backend provides at least one DailyContent record so the Tadabbur/Hadith/Islamic Quote carousel has content by default on existing deployments (e.g., seed a default entry during upgrade if none exists).",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "fitur tambahkan slide untuk tampilkan motivasi harian (tadabbur, hadits, qoute islami) belum muncul"
-        ]
-      },
-      "acceptanceCriteria": [
-        "After upgrading an existing canister that has zero daily content items, `getContents()` returns at least one `DailyContent` item without requiring an admin to manually create it first.",
-        "Seeding logic does not overwrite existing admin-managed content if daily content items already exist.",
-        "Admin can still update/delete daily content via existing admin endpoints and the Dashboard reflects updates after refresh."
-      ]
-    },
-    {
-      "id": "REQ-19",
-      "text": "Add basic diagnostics for the daily content query failure path so the UI does not silently hide the daily content section when the fetch fails (e.g., show a small error state message in English).",
+      "id": "REQ-28",
+      "text": "Replace the monthly progress “bar” visualization with a line chart (SVG-based) so the monthly progress page shows a line-only chart for daily percentage progress instead of vertical bars.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-6"
         ],
         "quotes": [
-          "fitur tambahkan slide untuk tampilkan motivasi harian (tadabbur, hadits, qoute islami) belum muncul"
+          "dashboard statitistik nya jangan pakai balok tapi pakai chart garis saja"
         ]
       },
       "acceptanceCriteria": [
-        "If the daily content query errors, the Dashboard shows an English error state message in the Daily Content section (instead of rendering nothing).",
-        "The rest of the Dashboard continues to render normally even if daily content loading fails."
+        "The monthly progress chart renders as a line chart (polyline/path) over the days of the selected month; no bar rectangles are rendered.",
+        "The chart still shows Y-axis percentage labels (0–100%) and day labels along the X-axis (or a readable subset if space is limited).",
+        "The chart remains horizontally scrollable for long months on mobile, consistent with the current UX.",
+        "Empty state behavior remains correct: when there is no data, the chart area does not render and the existing empty state is shown."
+      ]
+    },
+    {
+      "id": "REQ-29",
+      "text": "Update any affected loading/error/empty UI states introduced or modified by these changes to use English user-facing text in the modified components/pages.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Any new or modified user-facing strings in the touched UI (e.g., save-in-progress / save-failed messaging related to persistence, and any chart-related labels if changed) are in English.",
+        "Existing strings that are not touched remain unchanged."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or any files in frontend/src/components/ui (compose them instead).",
-    "Backend must remain a single Motoko actor in backend/main.mo; add/adjust backend/migration.mo only if needed for upgrading existing state.",
-    "All user-facing text added/changed for this request must be in English."
+    "Backend must remain a single Motoko actor in backend/main.mo; only add backend/migration.mo if a real state migration is required.",
+    "Do not edit frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui/*."
   ],
   "nonGoals": [
-    "Adding new slide categories beyond Tadabbur, Hadith, and Islamic Quote.",
-    "Changing authentication, roles, or admin/user access rules.",
-    "Adding external services or databases for content management."
+    "Do not add new tracking categories beyond the existing modules (sholat, fasting, tilawah, murojaah, tahfidz, sedekah).",
+    "Do not redesign the entire dashboard UI; only change the requested chart type and the persistence bug.",
+    "Do not introduce external databases, third-party auth providers, or real-time/websocket features."
   ],
   "imageRequirements": {
     "required": [],

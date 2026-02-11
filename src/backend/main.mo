@@ -1,22 +1,22 @@
-import Text "mo:core/Text";
 import Map "mo:core/Map";
+import Principal "mo:core/Principal";
 import Iter "mo:core/Iter";
 import List "mo:core/List";
-import Time "mo:core/Time";
-import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
+import Migration "migration";
+
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-import DailyContentMigration "migration";
 
-(with migration = DailyContentMigration.run)
+// Use migration and include MixinAuthorization
+(with migration = Migration.run)
 actor {
   // Make this private. Public access must happen via functions.
   var sedekahPaymentLink : Text = "https://tribelio.page/site/donation/9U7UPN3Y";
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
-  type Date = Int; // Unix date representation
+  type Date = Int;
   type Range = {
     surah : Text;
     verseStart : Nat;
@@ -27,25 +27,37 @@ actor {
     isFasting : Bool;
     note : ?Text;
   };
-
   type Tilawah = Range;
   type Murojaah = Range;
   type Tahfidz = Range;
 
   public type Sedekah = {
     completed : Bool;
+    amount : ?Nat;
     paymentLink : ?Text; // must be nullable
   };
 
-  type Task = {
+  public type Sholat = {
+    fajr : Bool;
+    dhuhr : Bool;
+    asr : Bool;
+    maghrib : Bool;
+    isha : Bool;
+    dhuha : Bool;
+    tarawih : Bool;
+    qiyamulLail : Bool;
+  };
+
+  public type Task = {
     fasting : ?Fasting;
     tilawah : ?Tilawah;
     murojaah : ?Murojaah;
     tahfidz : ?Tahfidz;
     sedekah : ?Sedekah;
+    sholat : ?Sholat;
   };
 
-  type DailyContent = {
+  public type DailyContent = {
     quranReflection : Text;
     hadith : Text;
     motivation : Text;
@@ -61,6 +73,22 @@ actor {
   let userTasks = Map.empty<Principal, UserData>();
   let dailyContents = Map.empty<Int, DailyContent>();
   let userProfiles = Map.empty<Principal, UserProfile>();
+
+  // Public check for currently logged in user task.
+  public query ({ caller }) func getTask(date : Date) : async ?Task {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can access tasks");
+    };
+
+    switch (userTasks.get(caller)) {
+      case (null) {
+        Runtime.trap("User not found");
+      };
+      case (?userData) {
+        userData.get(date);
+      };
+    };
+  };
 
   // User Profile Management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
@@ -139,34 +167,18 @@ actor {
   };
 
   // Task Management - User Operations
-  public shared ({ caller }) func createOrUpdateTask(date : Date, tasks : Task) : async () {
+  public shared ({ caller }) func createOrUpdateTask(date : Date, task : Task) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can create tasks");
     };
 
-    switch (userTasks.get(caller)) {
-      case (null) {
-        Runtime.trap("User not found");
-      };
-      case (?userData) {
-        userData.add(date, tasks);
-      };
-    };
-  };
-
-  public query ({ caller }) func getTask(date : Date) : async ?Task {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access tasks");
+    let userData = switch (userTasks.get(caller)) {
+      case (null) { Map.empty<Date, Task>() };
+      case (?existing) { existing };
     };
 
-    switch (userTasks.get(caller)) {
-      case (null) {
-        Runtime.trap("User not found");
-      };
-      case (?userData) {
-        userData.get(date);
-      };
-    };
+    userData.add(date, task);
+    userTasks.add(caller, userData);
   };
 
   public query ({ caller }) func getTasksInRange(startDate : Date, endDate : Date) : async [(Date, Task)] {
@@ -188,19 +200,18 @@ actor {
   };
 
   // Task Management - Admin Operations
-  public shared ({ caller }) func createOrUpdateTaskForUser(user : Principal, date : Date, tasks : Task) : async () {
+  public shared ({ caller }) func createOrUpdateTaskForUser(user : Principal, date : Date, task : Task) : async () {
     if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can create tasks for users");
     };
 
-    switch (userTasks.get(user)) {
-      case (null) {
-        Runtime.trap("User not found");
-      };
-      case (?userData) {
-        userData.add(date, tasks);
-      };
+    let userData = switch (userTasks.get(user)) {
+      case (null) { Map.empty<Date, Task>() };
+      case (?existing) { existing };
     };
+
+    userData.add(date, task);
+    userTasks.add(user, userData);
   };
 
   public query ({ caller }) func getTaskForUser(user : Principal, date : Date) : async ?Task {
@@ -272,6 +283,16 @@ actor {
     murojaahEntries : Nat;
     tahfidzEntries : Nat;
     sedekahDays : Nat;
+    sholatStats : {
+      fajr : Nat;
+      dhuhr : Nat;
+      asr : Nat;
+      maghrib : Nat;
+      isha : Nat;
+      dhuha : Nat;
+      tarawih : Nat;
+      qiyamulLail : Nat;
+    };
   } {
     if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can view user statistics");
@@ -287,6 +308,14 @@ actor {
         var murojaahEntries = 0;
         var tahfidzEntries = 0;
         var sedekahDays = 0;
+        var fajr = 0;
+        var dhuhr = 0;
+        var asr = 0;
+        var maghrib = 0;
+        var isha = 0;
+        var dhuha = 0;
+        var tarawih = 0;
+        var qiyamulLail = 0;
 
         for ((date, task) in userData.entries()) {
           if (date >= startDate and date <= endDate) {
@@ -314,6 +343,19 @@ actor {
               };
               case (null) {};
             };
+            switch (task.sholat) {
+              case (?sholat) {
+                if (sholat.fajr) { fajr += 1 };
+                if (sholat.dhuhr) { dhuhr += 1 };
+                if (sholat.asr) { asr += 1 };
+                if (sholat.maghrib) { maghrib += 1 };
+                if (sholat.isha) { isha += 1 };
+                if (sholat.dhuha) { dhuha += 1 };
+                if (sholat.tarawih) { tarawih += 1 };
+                if (sholat.qiyamulLail) { qiyamulLail += 1 };
+              };
+              case (null) {};
+            };
           };
         };
 
@@ -323,6 +365,16 @@ actor {
           murojaahEntries = murojaahEntries;
           tahfidzEntries = tahfidzEntries;
           sedekahDays = sedekahDays;
+          sholatStats = {
+            fajr = fajr;
+            dhuhr = dhuhr;
+            asr = asr;
+            maghrib = maghrib;
+            isha = isha;
+            dhuha = dhuha;
+            tarawih = tarawih;
+            qiyamulLail = qiyamulLail;
+          };
         };
       };
     };

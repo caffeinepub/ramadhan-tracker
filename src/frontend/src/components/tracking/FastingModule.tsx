@@ -32,8 +32,12 @@ export function FastingModule({ selectedDate }: FastingModuleProps) {
       await updateTask.mutateAsync({
         date: timestamp,
         task: {
-          ...task,
           fasting: { isFasting: checked, note: note || undefined },
+          tilawah: task?.tilawah,
+          murojaah: task?.murojaah,
+          tahfidz: task?.tahfidz,
+          sedekah: task?.sedekah,
+          sholat: task?.sholat,
         },
       });
       toast.success('Fasting status updated');
@@ -48,8 +52,12 @@ export function FastingModule({ selectedDate }: FastingModuleProps) {
       await updateTask.mutateAsync({
         date: timestamp,
         task: {
-          ...task,
           fasting: { isFasting, note: note.trim() || undefined },
+          tilawah: task?.tilawah,
+          murojaah: task?.murojaah,
+          tahfidz: task?.tahfidz,
+          sedekah: task?.sedekah,
+          sholat: task?.sholat,
         },
       });
       toast.success('Note saved');
@@ -61,11 +69,11 @@ export function FastingModule({ selectedDate }: FastingModuleProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Fasting</CardTitle>
+        <CardTitle>Puasa</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
-          <Label htmlFor="fasting-toggle">Fasting today?</Label>
+          <Label htmlFor="fasting-toggle">Puasa hari ini?</Label>
           <Switch
             id="fasting-toggle"
             checked={isFasting}
@@ -74,12 +82,12 @@ export function FastingModule({ selectedDate }: FastingModuleProps) {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="fasting-note">Optional Note</Label>
+          <Label htmlFor="fasting-note">Catatan Opsional</Label>
           <Textarea
             id="fasting-note"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="Add any notes about your fasting..."
+            placeholder="Tambahkan catatan tentang puasa Anda..."
             rows={3}
           />
           <Button onClick={handleSaveNote} disabled={updateTask.isPending} size="sm">
@@ -89,7 +97,7 @@ export function FastingModule({ selectedDate }: FastingModuleProps) {
                 Saving...
               </>
             ) : (
-              'Save Note'
+              'Simpan Catatan'
             )}
           </Button>
         </div>

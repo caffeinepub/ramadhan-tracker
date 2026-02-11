@@ -25,6 +25,17 @@ export interface Murojaah {
 export interface Sedekah {
   'completed' : boolean,
   'paymentLink' : [] | [string],
+  'amount' : [] | [bigint],
+}
+export interface Sholat {
+  'asr' : boolean,
+  'maghrib' : boolean,
+  'fajr' : boolean,
+  'isha' : boolean,
+  'tarawih' : boolean,
+  'dhuha' : boolean,
+  'dhuhr' : boolean,
+  'qiyamulLail' : boolean,
 }
 export interface Tahfidz {
   'verseStart' : bigint,
@@ -33,6 +44,7 @@ export interface Tahfidz {
 }
 export interface Task {
   'murojaah' : [] | [Murojaah],
+  'sholat' : [] | [Sholat],
   'tilawah' : [] | [Tilawah],
   'tahfidz' : [] | [Tahfidz],
   'fasting' : [] | [Fasting],
@@ -80,6 +92,16 @@ export interface _SERVICE {
       'fastingDays' : bigint,
       'tahfidzEntries' : bigint,
       'murojaahEntries' : bigint,
+      'sholatStats' : {
+        'asr' : bigint,
+        'maghrib' : bigint,
+        'fajr' : bigint,
+        'isha' : bigint,
+        'tarawih' : bigint,
+        'dhuha' : bigint,
+        'dhuhr' : bigint,
+        'qiyamulLail' : bigint,
+      },
       'sedekahDays' : bigint,
     }
   >,

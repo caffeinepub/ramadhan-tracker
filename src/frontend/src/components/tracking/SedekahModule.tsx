@@ -28,14 +28,18 @@ export function SedekahModule({ selectedDate }: SedekahModuleProps) {
       await updateTask.mutateAsync({
         date: timestamp,
         task: {
-          ...task,
+          fasting: task?.fasting,
+          tilawah: task?.tilawah,
+          murojaah: task?.murojaah,
+          tahfidz: task?.tahfidz,
           sedekah: { completed: true, paymentLink },
+          sholat: task?.sholat,
         },
       });
-      toast.success('Sedekah recorded! Opening payment link...');
+      toast.success('Sedekah tercatat! Membuka link pembayaran...');
       window.open(paymentLink, '_blank', 'noopener,noreferrer');
     } catch (error) {
-      toast.error('Failed to record sedekah');
+      toast.error('Failed to record Sedekah');
     }
   };
 
@@ -52,7 +56,7 @@ export function SedekahModule({ selectedDate }: SedekahModuleProps) {
           <Alert>
             <AlertDescription className="flex items-center gap-2">
               <Heart className="h-4 w-4 text-primary fill-primary" />
-              Sedekah completed for this day. May Allah accept your charity.
+              Sedekah selesai untuk hari ini. Semoga Allah menerima amal Anda.
             </AlertDescription>
           </Alert>
         ) : (
@@ -65,7 +69,7 @@ export function SedekahModule({ selectedDate }: SedekahModuleProps) {
             ) : (
               <>
                 <Heart className="mr-2 h-4 w-4" />
-                Donate Now
+                Donasi Sekarang
                 <ExternalLink className="ml-2 h-4 w-4" />
               </>
             )}

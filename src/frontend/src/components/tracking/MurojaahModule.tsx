@@ -39,17 +39,21 @@ export function MurojaahModule({ selectedDate }: MurojaahModuleProps) {
       await updateTask.mutateAsync({
         date: timestamp,
         task: {
-          ...task,
+          fasting: task?.fasting,
+          tilawah: task?.tilawah,
           murojaah: {
             surah: surah.trim(),
             verseStart: BigInt(verseStart),
             verseEnd: BigInt(verseEnd),
           },
+          tahfidz: task?.tahfidz,
+          sedekah: task?.sedekah,
+          sholat: task?.sholat,
         },
       });
       toast.success('Murojaah saved');
     } catch (error) {
-      toast.error('Failed to save murojaah');
+      toast.error('Failed to save Murojaah');
     }
   };
 
@@ -60,17 +64,17 @@ export function MurojaahModule({ selectedDate }: MurojaahModuleProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="murojaah-surah">Surah Name</Label>
+          <Label htmlFor="murojaah-surah">Nama Surah</Label>
           <Input
             id="murojaah-surah"
             value={surah}
             onChange={(e) => setSurah(e.target.value)}
-            placeholder="e.g., Al-Baqarah"
+            placeholder="contoh: Al-Baqarah"
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="murojaah-start">Verse From</Label>
+            <Label htmlFor="murojaah-start">Ayat Dari</Label>
             <Input
               id="murojaah-start"
               type="number"
@@ -81,7 +85,7 @@ export function MurojaahModule({ selectedDate }: MurojaahModuleProps) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="murojaah-end">Verse To</Label>
+            <Label htmlFor="murojaah-end">Ayat Sampai</Label>
             <Input
               id="murojaah-end"
               type="number"
@@ -99,7 +103,7 @@ export function MurojaahModule({ selectedDate }: MurojaahModuleProps) {
               Saving...
             </>
           ) : (
-            'Save Murojaah'
+            'Simpan Murojaah'
           )}
         </Button>
       </CardContent>

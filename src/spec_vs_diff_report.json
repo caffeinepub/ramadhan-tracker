@@ -1,17 +1,81 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-10T16:15:14.631Z",
-  "summary": "Diff adds frontend empty/error states for Daily Content and auto-rotating Tadabbur/Hadith/Islamic Quote slides, and adds a backend migration that seeds default daily content on upgrade when none exists.",
-  "missing_requirements": [],
-  "hallucinated_features": [],
-  "confidence": 0.74,
+  "generatedAt": "2026-02-11T00:24:21.001Z",
+  "summary": "REQ-28 appears implemented via a new SVG line chart component and MonthlyProgressPage wiring. However, REQ-27 is only partially evidenced (frontend now refetches tasks and attempts to preserve other module fields), and key persistence/exit-safety behaviors are not shown. REQ-29 is not met in modified UI: multiple modified components/pages still contain Indonesian user-facing text. The diff also introduces backend migration scaffolding and substantial user-profile/admin/auth logic not requested.",
+  "missing_requirements": [
+    {
+      "id": "REQ-27",
+      "requirement": "Fix daily tracking persistence so saved daily progress is reliably loaded after refresh/reopen; in-flight updates on exit are not silently lost; partial updates preserve existing fields; no runtime errors when saving on a date with no Task record.",
+      "reason": "While tracking modules now read from useGetTask and include other task fields during updates (suggesting preservation), the diff does not show any explicit handling for in-flight saves during tab close/refresh (e.g., beforeunload protection, completion guarantee, or user warning). Also, backend getTask currently traps on \"User not found\", which can cause runtime errors rather than returning null for users without initialized task maps; createOrUpdateTask behavior is not visible in the truncated backend diff, so safe creation/merge when no prior Task record cannot be confirmed.",
+      "evidence": [
+        "frontend/src/components/tracking/FastingModule.tsx",
+        "frontend/src/components/tracking/SholatModule.tsx",
+        "frontend/src/components/tracking/TilawahModule.tsx",
+        "frontend/src/components/tracking/MurojaahModule.tsx",
+        "frontend/src/components/tracking/TahfidzModule.tsx",
+        "frontend/src/components/tracking/SedekahModule.tsx",
+        "frontend/src/hooks/useBackendQueries.ts",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-29",
+      "requirement": "Update any affected loading/error/empty UI states introduced or modified by these changes to use English user-facing text in the modified components/pages.",
+      "reason": "Modified UI still contains Indonesian user-facing strings in touched components/pages (including MonthlyProgressPage loading/error text and multiple tracking module labels/buttons). Since these components were modified as part of REQ-27/REQ-28 work, the requirement that modified user-facing strings be in English is not satisfied.",
+      "evidence": [
+        "frontend/src/pages/MonthlyProgressPage.tsx",
+        "frontend/src/pages/DashboardPage.tsx",
+        "frontend/src/components/tracking/FastingModule.tsx",
+        "frontend/src/components/tracking/MurojaahModule.tsx",
+        "frontend/src/components/tracking/TahfidzModule.tsx",
+        "frontend/src/components/tracking/TilawahModule.tsx",
+        "frontend/src/components/tracking/SedekahModule.tsx",
+        "frontend/src/components/tracking/SholatModule.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Added backend migration module and wired migration usage, despite no demonstrated need for state migration related to the requested persistence/chart changes.",
+      "reason": "BuildRequest constraint allows adding backend/migration.mo only if a real state migration is required; the added migration is a no-op identity transform and the diff summary does not show a schema/state change that necessitates migration for REQ-27/REQ-28.",
+      "evidence": [
+        "backend/migration.mo",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Introduced/expanded backend user profile management and admin user-management APIs (getCallerUserProfile, saveCallerUserProfile, createUser, updateUserProfile, deactivateUser, etc.).",
+      "reason": "Not requested by REQ-27/REQ-28/REQ-29, and goes beyond the specified scope (persistence bug + chart type change).",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/hooks/useBackendQueries.ts",
+        "frontend/src/pages/DashboardPage.tsx"
+      ]
+    },
+    {
+      "description": "Introduced/expanded authorization/access-control mixin and role checks around task/profile access.",
+      "reason": "Not part of the requested changes; may be beneficial, but is not requested in this BuildRequest.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    }
+  ],
+  "confidence": 0.68,
   "changed_files": [
     "backend/main.mo",
     "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/dashboard/DailyContentCarousel.tsx",
+    "frontend/src/components/dashboard/MonthlyProgressChart.tsx",
+    "frontend/src/components/tracking/FastingModule.tsx",
+    "frontend/src/components/tracking/MurojaahModule.tsx",
+    "frontend/src/components/tracking/SedekahModule.tsx",
+    "frontend/src/components/tracking/SholatModule.tsx",
+    "frontend/src/components/tracking/TahfidzModule.tsx",
+    "frontend/src/components/tracking/TilawahModule.tsx",
     "frontend/src/hooks/useBackendQueries.ts",
+    "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/pages/MonthlyProgressPage.tsx",
     "project_state.json"
   ]
 }

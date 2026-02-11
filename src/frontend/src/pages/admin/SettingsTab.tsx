@@ -21,15 +21,15 @@ export function SettingsTab() {
 
   const handleSave = async () => {
     if (!paymentLink.trim()) {
-      toast.error('Payment link cannot be empty');
+      toast.error('Link pembayaran tidak boleh kosong');
       return;
     }
 
     try {
       await setPaymentLink.mutateAsync(paymentLink.trim());
-      toast.success('Settings saved successfully');
+      toast.success('Pengaturan berhasil disimpan');
     } catch (error) {
-      toast.error('Failed to save settings');
+      toast.error('Gagal menyimpan pengaturan');
     }
   };
 
@@ -46,12 +46,12 @@ export function SettingsTab() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Application Settings</CardTitle>
-        <CardDescription>Configure global application settings</CardDescription>
+        <CardTitle>Pengaturan Aplikasi</CardTitle>
+        <CardDescription>Konfigurasi pengaturan aplikasi global</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="payment-link">Sedekah Payment Link</Label>
+          <Label htmlFor="payment-link">Link Pembayaran Sedekah</Label>
           <Input
             id="payment-link"
             type="url"
@@ -60,7 +60,7 @@ export function SettingsTab() {
             placeholder="https://tribelio.page/site/donation/9U7UPN3Y"
           />
           <p className="text-xs text-muted-foreground">
-            This link will be opened when users click the "Donate Now" button
+            Link ini akan dibuka ketika pengguna mengklik tombol "Donasi Sekarang"
           </p>
         </div>
 
@@ -68,12 +68,12 @@ export function SettingsTab() {
           {setPaymentLink.isPending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
+              Menyimpan...
             </>
           ) : (
             <>
               <Save className="mr-2 h-4 w-4" />
-              Save Settings
+              Simpan Pengaturan
             </>
           )}
         </Button>

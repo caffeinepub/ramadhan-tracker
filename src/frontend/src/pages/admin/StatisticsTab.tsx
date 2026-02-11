@@ -23,12 +23,12 @@ export function StatisticsTab() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Participation Statistics</CardTitle>
+        <CardTitle>Statistik Partisipasi</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="stats-start">Start Date</Label>
+            <Label htmlFor="stats-start">Tanggal Mulai</Label>
             <Input
               id="stats-start"
               type="date"
@@ -37,7 +37,7 @@ export function StatisticsTab() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="stats-end">End Date</Label>
+            <Label htmlFor="stats-end">Tanggal Akhir</Label>
             <Input
               id="stats-end"
               type="date"
@@ -48,7 +48,7 @@ export function StatisticsTab() {
         </div>
 
         <Button onClick={handleViewStats} disabled={!startDate || !endDate}>
-          View Statistics
+          Lihat Statistik
         </Button>
 
         {showStats && (
@@ -56,7 +56,7 @@ export function StatisticsTab() {
             <div className="grid gap-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Total Users</CardTitle>
+                  <CardTitle className="text-base">Total Pengguna</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-3xl font-bold">{users?.length || 0}</p>
@@ -65,12 +65,19 @@ export function StatisticsTab() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Overall Participation</CardTitle>
+                  <CardTitle className="text-base">Partisipasi Keseluruhan</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
                     <div className="flex justify-between text-sm mb-1">
-                      <span>Fasting</span>
+                      <span>Sholat</span>
+                      <span>0%</span>
+                    </div>
+                    <Progress value={0} />
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Puasa</span>
                       <span>0%</span>
                     </div>
                     <Progress value={0} />

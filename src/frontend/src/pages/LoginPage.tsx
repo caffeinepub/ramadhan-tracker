@@ -21,16 +21,16 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-muted">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-2">
-          <CardTitle className="text-3xl font-bold text-primary">Ramadhan Tracker</CardTitle>
+          <CardTitle className="text-3xl font-bold text-primary">Pelacak Ramadhan</CardTitle>
           <CardDescription className="text-base">
-            Track your spiritual journey during the blessed month
+            Lacak perjalanan spiritual Anda selama bulan yang penuh berkah
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="text-center text-sm text-muted-foreground space-y-2">
-            <p>Welcome! Please sign in to access your dashboard.</p>
+            <p>Selamat datang! Silakan masuk untuk mengakses dasbor Anda.</p>
             <p className="text-xs">
-              Note: Accounts are managed by administrators. Contact your admin if you need access.
+              Catatan: Akun dikelola oleh administrator. Hubungi admin Anda jika Anda memerlukan akses.
             </p>
           </div>
           <Button
@@ -42,10 +42,10 @@ export default function LoginPage() {
             {isLoggingIn ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Signing in...
+                Masuk...
               </>
             ) : (
-              'Sign In'
+              'Masuk'
             )}
           </Button>
         </CardContent>

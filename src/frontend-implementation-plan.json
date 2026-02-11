@@ -1,40 +1,134 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Show empty/error states for Dashboard Daily Content carousel",
+  "title": "Fix daily tracking persistence across reload/exit and switch monthly stats to SVG line chart",
   "requirements": [
     {
-      "id": "REQ-17",
-      "summary": "Render a visible Daily Content section with an English empty state when there is no daily content, instead of rendering nothing.",
+      "id": "REQ-27",
+      "summary": "Ensure daily tracking changes persist reliably across refresh/reopen, preserve partial updates, and communicate save-in-progress/failure.",
       "acceptanceCriteria": [
-        "When `getContents()` returns an empty array, the Dashboard still shows a Daily Content section (card) with an English empty-state message (e.g., 'No daily content yet. Ask an admin to add Tadabbur, Hadith, and Islamic Quote in the Admin Panel.').",
-        "When `getContents()` returns at least one content item, the carousel renders and auto-rotates through the three labeled slide types: 'Tadabbur', 'Hadith', and 'Islamic Quote'."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/dashboard/DailyContentCarousel.tsx",
-          "operation": "modify",
-          "description": "Update the DailyContentCarousel to always render a Daily Content Card: show an English empty-state message when `contents` is an empty array (instead of returning null), and keep the existing carousel rendering/auto-rotation behavior when content exists with labeled slides 'Tadabbur', 'Hadith', and 'Islamic Quote'. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-19",
-      "summary": "Add basic UI diagnostics so daily content fetch failures show an English error state and do not hide the Daily Content section.",
-      "acceptanceCriteria": [
-        "If the daily content query errors, the Dashboard shows an English error state message in the Daily Content section (instead of rendering nothing).",
-        "The rest of the Dashboard continues to render normally even if daily content loading fails."
+        "Given a user updates any module and sees a success confirmation, when the user refreshes the page or closes and reopens the app, the same date’s data is fetched and rendered with the saved values.",
+        "Updates that are in-flight when the user leaves the page do not silently get lost: the UI either completes the save reliably or informs the user that saving is still in progress / failed (so they can retry).",
+        "No module overwrites other modules’ already-saved fields for the same date (partial updates must preserve existing fields).",
+        "No runtime errors occur when saving on a date that previously had no Task record."
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useBackendQueries.ts",
           "operation": "modify",
-          "description": "Adjust the `useGetContents` React Query configuration to support an explicit failure path suitable for UI diagnostics (e.g., disable automatic retries and ensure errors are surfaced to the component). Verify the component's usage instructions before implementing."
+          "description": "Update task mutation flow to support safe partial updates (merge with latest cached task for the selected date before saving) and expose mutation state that can be used for a global save-in-progress indicator. Ensure cache invalidation/refetch keeps the selected date’s task consistent after refresh/reopen."
         },
         {
-          "path": "frontend/src/components/dashboard/DailyContentCarousel.tsx",
+          "path": "frontend/src/hooks/useTaskPersistence.ts",
+          "operation": "create",
+          "description": "Create a small frontend persistence helper hook to (1) track whether task saves are currently pending/failed for the selected date, and (2) register a beforeunload guard to warn when saves are in progress and provide an English message when a save failed and needs retry."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
           "operation": "modify",
-          "description": "Handle the `useGetContents` error state by rendering the same Daily Content Card with a small English error message (and without breaking the rest of the Dashboard), rather than returning null. Verify the component's usage instructions before implementing."
+          "description": "Persist the selectedDate across reload/reopen (e.g., localStorage) and restore it on mount so the same date is shown after refresh. Wire in the new persistence helper hook to display an English UI hint when saving is in progress or when the last save failed (retry guidance), and to enable the beforeunload warning while saving."
+        },
+        {
+          "path": "frontend/src/components/tracking/SholatModule.tsx",
+          "operation": "modify",
+          "description": "Switch module saves to the shared partial-update/merge approach (avoid overwriting other fields for the same date) and update any modified success/error text related to saving to English."
+        },
+        {
+          "path": "frontend/src/components/tracking/FastingModule.tsx",
+          "operation": "modify",
+          "description": "Switch module saves (toggle + note) to the shared partial-update/merge approach and update any modified save/loading/error strings to English."
+        },
+        {
+          "path": "frontend/src/components/tracking/TilawahModule.tsx",
+          "operation": "modify",
+          "description": "Switch module saves to the shared partial-update/merge approach and update any modified save/loading/error strings to English."
+        },
+        {
+          "path": "frontend/src/components/tracking/MurojaahModule.tsx",
+          "operation": "modify",
+          "description": "Switch module saves to the shared partial-update/merge approach and update any modified save/loading/error strings to English."
+        },
+        {
+          "path": "frontend/src/components/tracking/TahfidzModule.tsx",
+          "operation": "modify",
+          "description": "Switch module saves to the shared partial-update/merge approach and update any modified save/loading/error strings to English."
+        },
+        {
+          "path": "frontend/src/components/tracking/SedekahModule.tsx",
+          "operation": "modify",
+          "description": "Switch module save to the shared partial-update/merge approach (to preserve other fields) and update any modified error/loading/success strings to English."
+        }
+      ]
+    },
+    {
+      "id": "REQ-28",
+      "summary": "Replace the monthly progress bar chart with an SVG-based line-only chart while keeping labels and horizontal scrolling.",
+      "acceptanceCriteria": [
+        "The monthly progress chart renders as a line chart (polyline/path) over the days of the selected month; no bar rectangles are rendered.",
+        "The chart still shows Y-axis percentage labels (0–100%) and day labels along the X-axis (or a readable subset if space is limited).",
+        "The chart remains horizontally scrollable for long months on mobile, consistent with the current UX.",
+        "Empty state behavior remains correct: when there is no data, the chart area does not render and the existing empty state is shown."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/dashboard/MonthlyProgressChart.tsx",
+          "operation": "modify",
+          "description": "Replace the SVG bar rendering with a line-only visualization (polyline/path) plotted over days, keeping the existing scroll container, axes/gridlines, and Y-axis percentage labels. Ensure no <rect> bars are rendered and that X-axis day labels remain readable (optionally render a subset for tight layouts)."
+        },
+        {
+          "path": "frontend/src/pages/MonthlyProgressPage.tsx",
+          "operation": "modify",
+          "description": "Adjust any chart-related wiring needed after the chart implementation change (props/labels/layout) while preserving existing empty-state behavior (chart not rendered when no data) and maintaining horizontal scrolling UX."
+        }
+      ]
+    },
+    {
+      "id": "REQ-29",
+      "summary": "Ensure any new/modified loading, error, empty, and save-status UI strings introduced by the fixes are in English (without changing untouched strings).",
+      "acceptanceCriteria": [
+        "Any new or modified user-facing strings in the touched UI (e.g., save-in-progress / save-failed messaging related to persistence, and any chart-related labels if changed) are in English.",
+        "Existing strings that are not touched remain unchanged."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Update any newly introduced save-status messaging (e.g., saving-in-progress / save failed / retry guidance) to English, keeping other existing strings unchanged where possible."
+        },
+        {
+          "path": "frontend/src/components/tracking/SholatModule.tsx",
+          "operation": "modify",
+          "description": "Update any modified save confirmation/failure text to English (only where this requirement’s changes touch the strings)."
+        },
+        {
+          "path": "frontend/src/components/tracking/FastingModule.tsx",
+          "operation": "modify",
+          "description": "Update any modified save/loading/error strings (including note save states) to English."
+        },
+        {
+          "path": "frontend/src/components/tracking/TilawahModule.tsx",
+          "operation": "modify",
+          "description": "Update any modified save/loading/error strings to English."
+        },
+        {
+          "path": "frontend/src/components/tracking/MurojaahModule.tsx",
+          "operation": "modify",
+          "description": "Update any modified save/loading/error strings to English."
+        },
+        {
+          "path": "frontend/src/components/tracking/TahfidzModule.tsx",
+          "operation": "modify",
+          "description": "Update any modified save/loading/error strings to English."
+        },
+        {
+          "path": "frontend/src/components/tracking/SedekahModule.tsx",
+          "operation": "modify",
+          "description": "Update any modified save/loading/error strings to English (e.g., missing payment link, saving state, save failure)."
+        },
+        {
+          "path": "frontend/src/pages/MonthlyProgressPage.tsx",
+          "operation": "modify",
+          "description": "If loading/error/empty/chart labels are modified as part of the chart switch, ensure those modified user-facing strings are in English; leave unrelated existing strings unchanged."
         }
       ]
     }

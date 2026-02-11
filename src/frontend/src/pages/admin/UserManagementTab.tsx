@@ -19,7 +19,7 @@ export function UserManagementTab() {
 
   const handleCreateUser = async () => {
     if (!newUserForm.principal || !newUserForm.name || !newUserForm.email) {
-      toast.error('All fields are required');
+      toast.error('Semua kolom wajib diisi');
       return;
     }
 
@@ -33,11 +33,11 @@ export function UserManagementTab() {
           isActive: true,
         },
       });
-      toast.success('User created successfully');
+      toast.success('Pengguna berhasil dibuat');
       setShowCreateDialog(false);
       setNewUserForm({ principal: '', name: '', email: '' });
     } catch (error) {
-      toast.error('Failed to create user. Check the principal format.');
+      toast.error('Gagal membuat pengguna. Periksa format principal.');
     }
   };
 
@@ -45,24 +45,24 @@ export function UserManagementTab() {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>User Management</CardTitle>
+          <CardTitle>Manajemen Pengguna</CardTitle>
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
             <DialogTrigger asChild>
               <Button>
                 <UserPlus className="mr-2 h-4 w-4" />
-                Create User
+                Buat Pengguna
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Create New User</DialogTitle>
+                <DialogTitle>Buat Pengguna Baru</DialogTitle>
                 <DialogDescription>
-                  Add a new user account. The user will need their Internet Identity principal.
+                  Tambahkan akun pengguna baru. Pengguna memerlukan principal Internet Identity mereka.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="principal">Principal ID</Label>
+                  <Label htmlFor="principal">ID Principal</Label>
                   <Input
                     id="principal"
                     value={newUserForm.principal}
@@ -71,12 +71,12 @@ export function UserManagementTab() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
+                  <Label htmlFor="name">Nama</Label>
                   <Input
                     id="name"
                     value={newUserForm.name}
                     onChange={(e) => setNewUserForm({ ...newUserForm, name: e.target.value })}
-                    placeholder="User's full name"
+                    placeholder="Nama lengkap pengguna"
                   />
                 </div>
                 <div className="space-y-2">
@@ -86,17 +86,17 @@ export function UserManagementTab() {
                     type="email"
                     value={newUserForm.email}
                     onChange={(e) => setNewUserForm({ ...newUserForm, email: e.target.value })}
-                    placeholder="user@example.com"
+                    placeholder="pengguna@contoh.com"
                   />
                 </div>
                 <Button onClick={handleCreateUser} disabled={createUser.isPending} className="w-full">
                   {createUser.isPending ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Creating...
+                      Membuat...
                     </>
                   ) : (
-                    'Create User'
+                    'Buat Pengguna'
                   )}
                 </Button>
               </div>
@@ -115,7 +115,7 @@ export function UserManagementTab() {
               <TableRow>
                 <TableHead>Principal</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -123,11 +123,11 @@ export function UserManagementTab() {
                 <TableRow key={user.toString()}>
                   <TableCell className="font-mono text-xs">{user.toString().slice(0, 20)}...</TableCell>
                   <TableCell>
-                    <Badge>Active</Badge>
+                    <Badge>Aktif</Badge>
                   </TableCell>
                   <TableCell>
                     <Button variant="outline" size="sm">
-                      View Details
+                      Lihat Detail
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -135,7 +135,7 @@ export function UserManagementTab() {
             </TableBody>
           </Table>
         ) : (
-          <p className="text-center text-muted-foreground py-8">No users found</p>
+          <p className="text-center text-muted-foreground py-8">Tidak ada pengguna ditemukan</p>
         )}
       </CardContent>
     </Card>

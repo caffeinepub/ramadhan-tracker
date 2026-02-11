@@ -14,12 +14,26 @@ import { TilawahModule } from '@/components/tracking/TilawahModule';
 import { MurojaahModule } from '@/components/tracking/MurojaahModule';
 import { TahfidzModule } from '@/components/tracking/TahfidzModule';
 import { SedekahModule } from '@/components/tracking/SedekahModule';
+import { SholatModule } from '@/components/tracking/SholatModule';
 import { DownloadCsvCard } from '@/components/reports/DownloadCsvCard';
 import { dateToTimestamp, getTodayTimestamp } from '@/utils/date';
 import { Loader2 } from 'lucide-react';
 
+const SELECTED_DATE_KEY = 'dashboard_selected_date';
+
 export default function DashboardPage() {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(() => {
+    const stored = localStorage.getItem(SELECTED_DATE_KEY);
+    if (stored) {
+      try {
+        return new Date(stored);
+      } catch {
+        return new Date();
+      }
+    }
+    return new Date();
+  });
+
   const { data: userProfile, isLoading: profileLoading, isFetched } = useGetCallerUserProfile();
   const saveProfile = useSaveCallerUserProfile();
   const [showProfileSetup, setShowProfileSetup] = useState(false);
@@ -30,6 +44,10 @@ export default function DashboardPage() {
       setShowProfileSetup(true);
     }
   }, [isFetched, userProfile]);
+
+  useEffect(() => {
+    localStorage.setItem(SELECTED_DATE_KEY, selectedDate.toISOString());
+  }, [selectedDate]);
 
   const handleSaveProfile = async () => {
     if (!profileForm.name.trim() || !profileForm.email.trim()) return;
@@ -55,8 +73,8 @@ export default function DashboardPage() {
       <div className="container max-w-4xl mx-auto px-4 py-6 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold">Welcome, {userProfile?.name || 'User'}</h1>
-            <p className="text-muted-foreground">Track your daily worship activities</p>
+            <h1 className="text-2xl font-bold">Selamat Datang, {userProfile?.name || 'Pengguna'}</h1>
+            <p className="text-muted-foreground">Lacak aktivitas ibadah harian Anda</p>
           </div>
           <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
         </div>
@@ -68,6 +86,7 @@ export default function DashboardPage() {
         <DailyOverviewTiles selectedDate={selectedDate} />
 
         <div className="grid gap-4">
+          <SholatModule selectedDate={selectedDate} />
           <FastingModule selectedDate={selectedDate} />
           <TilawahModule selectedDate={selectedDate} />
           <MurojaahModule selectedDate={selectedDate} />
@@ -81,19 +100,19 @@ export default function DashboardPage() {
       <Dialog open={showProfileSetup} onOpenChange={setShowProfileSetup}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Complete Your Profile</DialogTitle>
+            <DialogTitle>Lengkapi Profil Anda</DialogTitle>
             <DialogDescription>
-              Please provide your name and email to get started.
+              Silakan masukkan nama dan email Anda untuk memulai.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Nama</Label>
               <Input
                 id="name"
                 value={profileForm.name}
                 onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
-                placeholder="Enter your name"
+                placeholder="Masukkan nama Anda"
               />
             </div>
             <div className="space-y-2">
@@ -103,7 +122,7 @@ export default function DashboardPage() {
                 type="email"
                 value={profileForm.email}
                 onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
-                placeholder="Enter your email"
+                placeholder="Masukkan email Anda"
               />
             </div>
             <Button
@@ -114,10 +133,10 @@ export default function DashboardPage() {
               {saveProfile.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving...
+                  Menyimpan...
                 </>
               ) : (
-                'Save Profile'
+                'Simpan Profil'
               )}
             </Button>
           </div>

@@ -39,17 +39,21 @@ export function TahfidzModule({ selectedDate }: TahfidzModuleProps) {
       await updateTask.mutateAsync({
         date: timestamp,
         task: {
-          ...task,
+          fasting: task?.fasting,
+          tilawah: task?.tilawah,
+          murojaah: task?.murojaah,
           tahfidz: {
             surah: surah.trim(),
             verseStart: BigInt(verseStart),
             verseEnd: BigInt(verseEnd),
           },
+          sedekah: task?.sedekah,
+          sholat: task?.sholat,
         },
       });
       toast.success('Tahfidz saved');
     } catch (error) {
-      toast.error('Failed to save tahfidz');
+      toast.error('Failed to save Tahfidz');
     }
   };
 
@@ -60,17 +64,17 @@ export function TahfidzModule({ selectedDate }: TahfidzModuleProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="tahfidz-surah">Surah Name</Label>
+          <Label htmlFor="tahfidz-surah">Nama Surah</Label>
           <Input
             id="tahfidz-surah"
             value={surah}
             onChange={(e) => setSurah(e.target.value)}
-            placeholder="e.g., Al-Baqarah"
+            placeholder="contoh: Al-Baqarah"
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="tahfidz-start">Verse From</Label>
+            <Label htmlFor="tahfidz-start">Ayat Dari</Label>
             <Input
               id="tahfidz-start"
               type="number"
@@ -81,7 +85,7 @@ export function TahfidzModule({ selectedDate }: TahfidzModuleProps) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="tahfidz-end">Verse To</Label>
+            <Label htmlFor="tahfidz-end">Ayat Sampai</Label>
             <Input
               id="tahfidz-end"
               type="number"
@@ -99,7 +103,7 @@ export function TahfidzModule({ selectedDate }: TahfidzModuleProps) {
               Saving...
             </>
           ) : (
-            'Save Tahfidz'
+            'Simpan Tahfidz'
           )}
         </Button>
       </CardContent>
