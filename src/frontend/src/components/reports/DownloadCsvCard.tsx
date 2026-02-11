@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -13,16 +13,27 @@ import { useActor } from '@/hooks/useActor';
 
 type ExportFormat = 'csv' | 'pdf';
 
-export function DownloadCsvCard() {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+interface DownloadCsvCardProps {
+  defaultStartDate?: string;
+  defaultEndDate?: string;
+}
+
+export function DownloadCsvCard({ defaultStartDate = '', defaultEndDate = '' }: DownloadCsvCardProps) {
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState(defaultEndDate);
   const [format, setFormat] = useState<ExportFormat>('csv');
   const [isDownloading, setIsDownloading] = useState(false);
   const { actor } = useActor();
 
+  // Update dates when defaults change (e.g., month navigation)
+  useEffect(() => {
+    if (defaultStartDate) setStartDate(defaultStartDate);
+    if (defaultEndDate) setEndDate(defaultEndDate);
+  }, [defaultStartDate, defaultEndDate]);
+
   const handleDownload = async () => {
     if (!startDate || !endDate) {
-      toast.error('Silakan pilih tanggal mulai dan tanggal akhir');
+      toast.error('Please select start and end dates');
       return;
     }
 
@@ -30,12 +41,12 @@ export function DownloadCsvCard() {
     const end = new Date(endDate);
 
     if (start > end) {
-      toast.error('Tanggal mulai harus sebelum tanggal akhir');
+      toast.error('Start date must be before end date');
       return;
     }
 
     if (!actor) {
-      toast.error('Backend tidak tersedia');
+      toast.error('Backend not available');
       return;
     }
 
@@ -52,10 +63,10 @@ export function DownloadCsvCard() {
       if (format === 'csv') {
         const csv = generateCsv(tasks);
         blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        filename = `laporan-ibadah-${startDate}-sampai-${endDate}.csv`;
+        filename = `worship-report-${startDate}-to-${endDate}.csv`;
       } else {
         blob = generatePdf(tasks, startDate, endDate);
-        filename = `laporan-ibadah-${startDate}-sampai-${endDate}.pdf`;
+        filename = `worship-report-${startDate}-to-${endDate}.pdf`;
       }
       
       const url = URL.createObjectURL(blob);
@@ -67,10 +78,10 @@ export function DownloadCsvCard() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      toast.success(`${format.toUpperCase()} berhasil diunduh`);
+      toast.success(`${format.toUpperCase()} downloaded successfully`);
     } catch (error) {
       console.error('Download error:', error);
-      toast.error(`Gagal mengunduh ${format.toUpperCase()}`);
+      toast.error(`Failed to download ${format.toUpperCase()}`);
     } finally {
       setIsDownloading(false);
     }
@@ -79,7 +90,7 @@ export function DownloadCsvCard() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Unduh Laporan Progres</CardTitle>
+        <CardTitle>Download Progress Report</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
@@ -94,9 +105,9 @@ export function DownloadCsvCard() {
             </SelectContent>
           </Select>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="start-date">Tanggal Mulai</Label>
+            <Label htmlFor="start-date">Start Date</Label>
             <Input
               id="start-date"
               type="date"
@@ -105,7 +116,7 @@ export function DownloadCsvCard() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="end-date">Tanggal Akhir</Label>
+            <Label htmlFor="end-date">End Date</Label>
             <Input
               id="end-date"
               type="date"
@@ -118,12 +129,12 @@ export function DownloadCsvCard() {
           {isDownloading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Membuat...
+              Generating...
             </>
           ) : (
             <>
               <Download className="mr-2 h-4 w-4" />
-              Unduh {format.toUpperCase()}
+              Download {format.toUpperCase()}
             </>
           )}
         </Button>

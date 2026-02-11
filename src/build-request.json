@@ -1,97 +1,53 @@
 {
   "kind": "build_request",
-  "title": "Fix prayer time accuracy, standardize affected UI to Indonesian, improve daily progress UI, and move report download to Monthly Progress page",
+  "title": "Fix Indonesia prayer times (WIB/WITA/WIT) to match real schedules",
   "priority": "high",
   "requirements": [
     {
-      "id": "REQ-53",
-      "text": "Fix the prayer times calculation so displayed times are realistic and match the selected Indonesia timezone (WIB/WITA/WIT), avoiding negative/invalid values and ensuring times fall within 00:00–23:59 for the selected date.",
+      "id": "REQ-75",
+      "text": "Fix the prayer time calculation so that the displayed schedule matches real Indonesian prayer schedules for the selected timezone (WIB/WITA/WIT) and selected date, eliminating clearly incorrect outputs (e.g., Subuh appearing around 09:12 or Isya around 00:03 for WIB). Update the implementation in `frontend/src/utils/prayerTimes.ts` accordingly.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-1"
         ],
         "quotes": [
-          "perbaiki jamnya karena belum sesuai dengan jadwal sholat"
+          "perbaiki jadwal sholat mengikuti jadwal yang berlaku di indonesia (wib, wita, dan wit). kerjakan sekarang"
         ]
       },
       "acceptanceCriteria": [
-        "On the Dashboard, the Prayer Times section never renders negative times (e.g., \"-15:12\") or invalid formats.",
-        "For each timezone option (WIB/WITA/WIT), Fajr < Sunrise < Dhuhr < Asr < Maghrib < Isha for the same selected date.",
-        "Switching the timezone updates the displayed prayer times immediately and persists the selection across reloads (localStorage).",
-        "Prayer times update correctly when the calendar date rolls over (auto-refresh behavior still works)."
+        "For each timezone option (WIB/WITA/WIT), the computed times are valid HH:MM and remain within 00:00–23:59 for the selected date.",
+        "Times are strictly chronological: Subuh < Terbit < Dzuhur < Ashar < Maghrib < Isya.",
+        "Timezone selection produces sensible shifts (WITA ~ +1 hour vs WIB, WIT ~ +2 hours vs WIB) for the same selected date, without wrapping into the wrong day.",
+        "The Prayer Times card no longer shows obviously incorrect times like Subuh near mid-morning or Isya near midnight for WIB on typical dates."
       ]
     },
     {
-      "id": "REQ-54",
-      "text": "Standardize the user-facing language to Bahasa Indonesia for the UI areas affected by this change set: Dashboard header copy, Prayer Times section labels/states, daily overview tiles, yesterday progress summary, and the report download UI.",
+      "id": "REQ-76",
+      "text": "Ensure the Prayer Times UI reliably surfaces a user-visible error state (with a Retry action) when prayer time computation fails validation, and does not render an obviously-wrong schedule. Keep any newly introduced or modified user-facing text in the affected components in English.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-1"
         ],
         "quotes": [
-          "ubah ke bahasa indonesia saja"
+          "perbaiki jadwal sholat mengikuti jadwal yang berlaku di indonesia (wib, wita, dan wit). kerjakan sekarang"
         ]
       },
       "acceptanceCriteria": [
-        "DashboardPage no longer shows English strings like “Welcome”, “Track your daily worship activities”, “Complete Your Profile”, “Save Profile”, and related form placeholders; they are replaced with Bahasa Indonesia equivalents.",
-        "PrayerTimesSection labels and states (title, field labels, loading/empty/error text, retry action) are in Bahasa Indonesia.",
-        "DailyOverviewTiles titles and summaries are in Bahasa Indonesia (e.g., Prayer/Fasting/Completed/Not recorded/Not completed are localized).",
-        "DownloadCsvCard labels/toasts/button states are in Bahasa Indonesia (including validation errors and success/failure toasts).",
-        "No new English strings are introduced in the modified components (unless they are non-user-facing logs)."
-      ]
-    },
-    {
-      "id": "REQ-55",
-      "text": "Improve the Daily Progress (Progres Harian) component UI and behavior so it is visually consistent, handles loading/empty states, and uses the same completion rules as the shared progress utility.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-6"
-        ],
-        "quotes": [
-          "perbaiki tampilan progres hariannya juga"
-        ]
-      },
-      "acceptanceCriteria": [
-        "DailyProgressBar shows a clear loading skeleton or loading state while the task query is in-flight, instead of implicitly showing 0 progress.",
-        "DailyProgressBar uses the shared progress calculation helper (frontend/src/utils/progress.ts) so its percentage/count logic is consistent with other progress views.",
-        "If there is no task data for the selected date, the component shows an explicit empty state message in Bahasa Indonesia and does not misleadingly imply recorded completion.",
-        "The progress bar and accompanying label are visually aligned and responsive (no overflow/truncation issues on mobile widths)."
-      ]
-    },
-    {
-      "id": "REQ-56",
-      "text": "Move the progress report download feature so it is available only on the Monthly Progress page, and remove it from the main Dashboard page.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-6"
-        ],
-        "quotes": [
-          "fitur download pindahkan ke dashboard (progress bulanan) saja"
-        ]
-      },
-      "acceptanceCriteria": [
-        "DashboardPage no longer renders the DownloadCsvCard (or any report download UI).",
-        "MonthlyProgressPage renders the report download UI (CSV/PDF) in a sensible location within the page layout.",
-        "The download functionality continues to work (CSV and PDF export from backend task range), with Bahasa Indonesia labels/toasts.",
-        "There is only one place in the authenticated UI where the report download UI is accessible: the Monthly Progress page."
+        "If computed prayer times fail validation (invalid format, out-of-range, or non-chronological), `frontend/src/components/dashboard/PrayerTimesSection.tsx` shows an error state with a working Retry button instead of displaying the times.",
+        "Retry recomputes and, if the next computation succeeds, the card returns to the normal schedule display without a hard refresh.",
+        "Any new or modified error/empty/retry text introduced while implementing this change is in English."
       ]
     }
   ],
   "constraints": [
-    "Do not modify files under frontend/src/components/ui (compose existing shadcn components instead).",
-    "Do not modify any files listed as immutable in SYSTEM_CONTEXT.frontend.immutablePaths.",
-    "Backend must remain single-actor (no additional backend services).",
-    "Use English only for this build request document; implement Bahasa Indonesia for user-facing UI per requirements."
+    "Frontend code must not modify files under `frontend/src/components/ui` (compose them only).",
+    "Do not edit immutable paths listed in SYSTEM_CONTEXT (e.g., `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`)."
   ],
   "nonGoals": [
-    "Changing the backend schema or task data model for prayer times.",
-    "Adding location/GPS-based prayer time calculations (keep using the existing WIB/WITA/WIT selection model).",
-    "Adding new export formats beyond CSV and PDF.",
-    "Redesigning the entire application theme outside of the affected components/pages."
+    "Implementing location/GPS-based prayer times by user coordinates.",
+    "Calling external prayer time APIs or integrating third-party services."
   ],
   "imageRequirements": {
     "required": [],

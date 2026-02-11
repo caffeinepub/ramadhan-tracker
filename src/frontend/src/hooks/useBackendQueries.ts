@@ -3,6 +3,8 @@ import { useActor } from './useActor';
 import type { UserProfile, DailyContent, Task, Date_ } from '../backend';
 import { Principal } from '@dfinity/principal';
 
+const PROFILE_QUERY_TIMEOUT = 10000; // 10 seconds timeout for profile query
+
 // User Profile Queries
 export function useGetCallerUserProfile() {
   const { actor, isFetching: actorFetching } = useActor();
@@ -11,10 +13,19 @@ export function useGetCallerUserProfile() {
     queryKey: ['currentUserProfile'],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      return actor.getCallerUserProfile();
+      
+      // Add timeout to prevent indefinite hanging
+      const timeoutPromise = new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('Profile fetch timeout')), PROFILE_QUERY_TIMEOUT)
+      );
+      
+      const profilePromise = actor.getCallerUserProfile();
+      
+      return Promise.race([profilePromise, timeoutPromise]);
     },
     enabled: !!actor && !actorFetching,
-    retry: false,
+    retry: 1, // Retry once on failure
+    retryDelay: 1000, // Wait 1 second before retry
   });
 
   return {

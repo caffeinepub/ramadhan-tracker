@@ -15,26 +15,17 @@ export function PrayerTimesSection({ selectedDate }: PrayerTimesSectionProps) {
 
   const timezones: IndonesiaTimezone[] = ['WIB', 'WITA', 'WIT'];
 
-  // Validate time format before rendering
-  const isValidTime = (time: string): boolean => {
-    const match = time.match(/^(\d{2}):(\d{2})$/);
-    if (!match) return false;
-    const hours = parseInt(match[1], 10);
-    const minutes = parseInt(match[2], 10);
-    return hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60;
-  };
-
   if (error) {
     return (
       <Card className="border-destructive/50">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between gap-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Clock className="h-5 w-5" />
               Waktu Sholat
             </CardTitle>
             <Select value={timezone} onValueChange={(value) => setTimezone(value as IndonesiaTimezone)}>
-              <SelectTrigger className="w-[140px]">
+              <SelectTrigger className="w-[130px] h-9 text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -47,18 +38,18 @@ export function PrayerTimesSection({ selectedDate }: PrayerTimesSectionProps) {
             </Select>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-4">
           <div className="flex flex-col items-center justify-center py-8 text-center space-y-4">
             <AlertCircle className="h-12 w-12 text-destructive" />
             <div>
-              <p className="font-medium text-destructive">Gagal memuat waktu sholat</p>
+              <p className="font-medium text-destructive">Unable to Load Prayer Times</p>
               <p className="text-sm text-muted-foreground mt-1">
-                Tidak dapat menghitung waktu sholat untuk tanggal yang dipilih
+                Could not calculate prayer times for the selected date
               </p>
             </div>
             <Button onClick={retry} variant="outline" size="sm">
               <RefreshCw className="mr-2 h-4 w-4" />
-              Coba Lagi
+              Retry
             </Button>
           </div>
         </CardContent>
@@ -68,14 +59,14 @@ export function PrayerTimesSection({ selectedDate }: PrayerTimesSectionProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between gap-4">
+          <CardTitle className="flex items-center gap-2 text-lg">
             <Clock className="h-5 w-5" />
             Waktu Sholat
           </CardTitle>
           <Select value={timezone} onValueChange={(value) => setTimezone(value as IndonesiaTimezone)}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[130px] h-9 text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -88,53 +79,41 @@ export function PrayerTimesSection({ selectedDate }: PrayerTimesSectionProps) {
           </Select>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-4">
         {isLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-4">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="space-y-2">
                 <Skeleton className="h-4 w-16" />
-                <Skeleton className="h-6 w-20" />
+                <Skeleton className="h-7 w-20" />
               </div>
             ))}
           </div>
         ) : prayerTimes ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            <div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-4">
+            <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Subuh</p>
-              <p className="text-lg font-semibold">
-                {isValidTime(prayerTimes.fajr) ? prayerTimes.fajr : '--:--'}
-              </p>
+              <p className="text-xl font-semibold tabular-nums">{prayerTimes.fajr}</p>
             </div>
-            <div>
+            <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Terbit</p>
-              <p className="text-lg font-semibold">
-                {isValidTime(prayerTimes.sunrise) ? prayerTimes.sunrise : '--:--'}
-              </p>
+              <p className="text-xl font-semibold tabular-nums">{prayerTimes.sunrise}</p>
             </div>
-            <div>
+            <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Dzuhur</p>
-              <p className="text-lg font-semibold">
-                {isValidTime(prayerTimes.dhuhr) ? prayerTimes.dhuhr : '--:--'}
-              </p>
+              <p className="text-xl font-semibold tabular-nums">{prayerTimes.dhuhr}</p>
             </div>
-            <div>
+            <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Ashar</p>
-              <p className="text-lg font-semibold">
-                {isValidTime(prayerTimes.asr) ? prayerTimes.asr : '--:--'}
-              </p>
+              <p className="text-xl font-semibold tabular-nums">{prayerTimes.asr}</p>
             </div>
-            <div>
+            <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Maghrib</p>
-              <p className="text-lg font-semibold">
-                {isValidTime(prayerTimes.maghrib) ? prayerTimes.maghrib : '--:--'}
-              </p>
+              <p className="text-xl font-semibold tabular-nums">{prayerTimes.maghrib}</p>
             </div>
-            <div>
+            <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Isya</p>
-              <p className="text-lg font-semibold">
-                {isValidTime(prayerTimes.isha) ? prayerTimes.isha : '--:--'}
-              </p>
+              <p className="text-xl font-semibold tabular-nums">{prayerTimes.isha}</p>
             </div>
           </div>
         ) : (

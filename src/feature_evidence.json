@@ -2,10 +2,9 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-fix-the-prayer-times-calculation-so-displayed-times-are-realistic-and-match-the-selected-indonesia-timezone-wib-wita-wit-avoiding-negative-invalid-values-and-ensuring-times-fall-within-00-00-23-59-for-the-selected-date",
-      "featureTitle": "Fix the prayer times calculation so displayed times are realistic and match the selected Indonesia timezone (WIB/WITA/WIT), avoiding negative/invalid values and ensuring times fall within 00:00–23:59 for the selected date.",
+      "featureId": "feature-fix-the-prayer-time-calculation-so-that-the-displayed-schedule-matches-real-indonesian-prayer-schedules-for-the-selected-timezone-wib-wita-wit-and-selected-date-eliminating-clearly-incorrect-outputs-e-g-subuh-appearing-around-09-12-or-isya-around-00-03-for-wib-update-the-implementation-in-frontend-src-utils-prayertimes-ts-accordingly",
+      "featureTitle": "Fix the prayer time calculation so that the displayed schedule matches real Indonesian prayer schedules for the selected timezone (WIB/WITA/WIT) and selected date, eliminating clearly incorrect outputs (e.g., Subuh appearing around 09:12 or Isya around 00:03 for WIB). Update the implementation in `frontend/src/utils/prayerTimes.ts` accordingly.",
       "files": [
-        "frontend/src/components/dashboard/PrayerTimesSection.tsx",
         "frontend/src/hooks/usePrayerTimes.ts",
         "frontend/src/utils/prayerTimes.ts"
       ],
@@ -18,19 +17,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-53"
+        "REQ-75"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-standardize-the-user-facing-language-to-bahasa-indonesia-for-the-ui-areas-affected-by-this-change-set-dashboard-header-copy-prayer-times-section-labels-states-daily-overview-tiles-yesterday-progress-summary-and-the-report-download-ui",
-      "featureTitle": "Standardize the user-facing language to Bahasa Indonesia for the UI areas affected by this change set: Dashboard header copy, Prayer Times section labels/states, daily overview tiles, yesterday progress summary, and the report download UI.",
+      "featureId": "feature-ensure-the-prayer-times-ui-reliably-surfaces-a-user-visible-error-state-with-a-retry-action-when-prayer-time-computation-fails-validation-and-does-not-render-an-obviously-wrong-schedule-keep-any-newly-introduced-or-modified-user-facing-text-in-the-affected-components-in-english",
+      "featureTitle": "Ensure the Prayer Times UI reliably surfaces a user-visible error state (with a Retry action) when prayer time computation fails validation, and does not render an obviously-wrong schedule. Keep any newly introduced or modified user-facing text in the affected components in English.",
       "files": [
-        "frontend/src/components/dashboard/DailyOverviewTiles.tsx",
-        "frontend/src/components/dashboard/PrayerTimesSection.tsx",
-        "frontend/src/components/dashboard/YesterdayProgressSummary.tsx",
-        "frontend/src/components/reports/DownloadCsvCard.tsx",
-        "frontend/src/pages/DashboardPage.tsx"
+        "frontend/src/hooks/usePrayerTimes.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -41,48 +36,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-54"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-improve-the-daily-progress-progres-harian-component-ui-and-behavior-so-it-is-visually-consistent-handles-loading-empty-states-and-uses-the-same-completion-rules-as-the-shared-progress-utility",
-      "featureTitle": "Improve the Daily Progress (Progres Harian) component UI and behavior so it is visually consistent, handles loading/empty states, and uses the same completion rules as the shared progress utility.",
-      "files": [
-        "frontend/src/components/dashboard/DailyProgressBar.tsx",
-        "frontend/src/utils/progress.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-55"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-move-the-progress-report-download-feature-so-it-is-available-only-on-the-monthly-progress-page-and-remove-it-from-the-main-dashboard-page",
-      "featureTitle": "Move the progress report download feature so it is available only on the Monthly Progress page, and remove it from the main Dashboard page.",
-      "files": [
-        "frontend/src/components/reports/DownloadCsvCard.tsx",
-        "frontend/src/pages/DashboardPage.tsx",
-        "frontend/src/pages/MonthlyProgressPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-56"
+        "REQ-76"
       ],
       "confidence": "high"
     }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 27,
+  "projectStateVersion": 39,
   "summary": "Mobile-first web app “Ramadhan Tracker” for personal worship tracking during Ramadhan, with admin-created accounts (no self-signup), user dashboard, daily tracking modules (puasa, tilawah, murojaah, tahfidz, sedekah subuh, and sholat), rotating Islamic content slides managed by admin, downloadable progress reports (PDF/CSV), monthly progress dashboard, full admin panel for user/content management and statistics, and UI language to be Bahasa Indonesia.",
   "architectural_notes": [
     "No public self-registration; all user accounts provisioned by admin.",
@@ -363,6 +363,158 @@
         "REQ-56"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-refine-the-monthly-progress-page-header-and-overall-layout-to-feel-more-polished-and-mobile-first-while-keeping-all-user-facing-strings-on-this-page-in-english-including-titles-labels-empty-loading-error-states",
+      "title": "Refine the Monthly Progress page header and overall layout to feel more polished and mobile-first, while keeping all user-facing strings on this page in English (including titles, labels, empty/loading/error states).",
+      "reqIds": [
+        "REQ-57"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-the-monthly-statistics-shown-on-the-monthly-progress-page-so-the-numbers-are-more-informative-and-accurately-defined-for-a-month-not-just-number-of-task-records-returned",
+      "title": "Improve the monthly statistics shown on the Monthly Progress page so the numbers are more informative and accurately defined for a month (not just ‘number of task records returned’).",
+      "reqIds": [
+        "REQ-58"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-monthlyprogresschart-interaction-and-readability-add-a-hover-tap-tooltip-that-shows-the-day-number-and-completion-percentage-and-visually-highlight-the-current-day-when-viewing-the-current-month",
+      "title": "Enhance the MonthlyProgressChart interaction and readability: add a hover/tap tooltip that shows the day number and completion percentage, and visually highlight the current day when viewing the current month.",
+      "reqIds": [
+        "REQ-59"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-monthly-progress-page-loading-error-empty-states-to-be-more-user-friendly-and-actionable-using-english-copy-and-offering-a-retry-action-on-errors",
+      "title": "Improve Monthly Progress page loading/error/empty states to be more user-friendly and actionable, using English copy and offering a retry action on errors.",
+      "reqIds": [
+        "REQ-60"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-the-report-download-card-experience-on-the-monthly-progress-page-by-prefilling-the-export-date-range-to-the-currently-selected-month-and-ensure-all-labels-toasts-in-this-flow-are-english",
+      "title": "Improve the report download card experience on the Monthly Progress page by prefilling the export date range to the currently selected month, and ensure all labels/toasts in this flow are English.",
+      "reqIds": [
+        "REQ-61"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-dashboard-page-being-stuck-on-an-infinite-loading-spinner-as-shown-in-the-provided-screenshot-by-ensuring-the-frontend-actor-initialization-cannot-block-the-app-indefinitely",
+      "title": "Fix the Dashboard page being stuck on an infinite loading spinner (as shown in the provided screenshot) by ensuring the frontend actor initialization cannot block the app indefinitely.",
+      "reqIds": [
+        "REQ-62"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-frontend-src-hooks-useactor-ts-so-the-call-to-actor-initializeaccesscontrolwithsecret-is-safe-and-non-blocking-for-normal-users-only-run-it-when-a-non-empty-caffeineadmintoken-exists-and-ensure-errors-timeouts-do-not-prevent-returning-the-actor",
+      "title": "Update `frontend/src/hooks/useActor.ts` so the call to `actor._initializeAccessControlWithSecret(...)` is safe and non-blocking for normal users: only run it when a non-empty `caffeineAdminToken` exists, and ensure errors/timeouts do not prevent returning the actor.",
+      "reqIds": [
+        "REQ-63"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-user-visible-english-error-state-and-retry-action-on-the-dashboard-when-the-user-profile-query-cannot-load-e-g-backend-trap-network-error-instead-of-showing-only-an-indefinite-spinner",
+      "title": "Add a user-visible, English error state and retry action on the Dashboard when the user profile query cannot load (e.g., backend trap/network error), instead of showing only an indefinite spinner.",
+      "reqIds": [
+        "REQ-64"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-the-visual-layout-of-the-dashboard-prayer-times-card-to-reduce-unused-whitespace-on-wide-screens-and-create-a-more-balanced-mobile-first-grid-that-scales-cleanly-from-small-to-large-breakpoints",
+      "title": "Improve the visual layout of the Dashboard Prayer Times card to reduce unused whitespace on wide screens and create a more balanced, mobile-first grid that scales cleanly from small to large breakpoints.",
+      "reqIds": [
+        "REQ-66"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-refine-the-timezone-selector-styling-in-the-prayer-times-card-header-so-it-looks-integrated-with-the-card-size-alignment-and-visual-weight-and-does-not-dominate-the-header-area",
+      "title": "Refine the timezone selector styling in the Prayer Times card header so it looks integrated with the card (size, alignment, and visual weight) and does not dominate the header area.",
+      "reqIds": [
+        "REQ-67"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-any-new-or-modified-user-facing-ui-strings-introduced-by-these-ui-changes-to-be-in-english-do-not-translate-existing-unchanged-indonesian-copy-as-part-of-this-request",
+      "title": "Update any new or modified user-facing UI strings introduced by these UI changes to be in English (do not translate existing unchanged Indonesian copy as part of this request).",
+      "reqIds": [
+        "REQ-68"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-prayer-times-calculation-so-the-displayed-times-match-realistic-indonesia-prayer-schedules-for-the-selected-timezone-wib-wita-wit-addressing-cases-where-times-are-clearly-incorrect-e-g-subuh-showing-09-12-and-isya-showing-00-03-for-wib-update-the-implementation-in-frontend-src-utils-prayertimes-ts-to-ensure-calculated-times-are-valid-and-correctly-reflect-the-selected-timezone-for-the-selected-date",
+      "title": "Fix the prayer times calculation so the displayed times match realistic Indonesia prayer schedules for the selected timezone (WIB/WITA/WIT), addressing cases where times are clearly incorrect (e.g., Subuh showing 09:12 and Isya showing 00:03 for WIB). Update the implementation in `frontend/src/utils/prayerTimes.ts` to ensure calculated times are valid and correctly reflect the selected timezone for the selected date.",
+      "reqIds": [
+        "REQ-69"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-defensive-validation-around-computed-prayer-times-so-the-ui-never-silently-displays-obviously-wrong-schedules-if-computed-times-fail-validation-invalid-format-out-of-range-or-non-chronological-ordering-treat-it-as-a-calculation-failure-and-surface-a-user-visible-error-state-with-a-retry-action-in-the-prayer-times-card",
+      "title": "Add defensive validation around computed prayer times so the UI never silently displays obviously-wrong schedules. If computed times fail validation (invalid format, out-of-range, or non-chronological ordering), treat it as a calculation failure and surface a user-visible error state with a retry action in the Prayer Times card.",
+      "reqIds": [
+        "REQ-70"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-any-new-or-modified-user-facing-text-introduced-while-implementing-the-prayer-time-fixes-especially-error-empty-retry-messaging-in-frontend-src-components-dashboard-prayertimessection-tsx-and-related-hooks-is-in-english",
+      "title": "Ensure any new or modified user-facing text introduced while implementing the prayer-time fixes (especially error/empty/retry messaging in `frontend/src/components/dashboard/PrayerTimesSection.tsx` and related hooks) is in English.",
+      "reqIds": [
+        "REQ-71"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-prayer-time-calculation-so-that-the-displayed-schedule-is-realistic-and-correctly-reflects-the-selected-indonesia-timezone-wib-wita-wit-for-the-selected-date-eliminating-clearly-incorrect-outputs-e-g-subuh-around-09-12-or-isya-around-00-03-for-wib-update-the-implementation-in-frontend-src-utils-prayertimes-ts-accordingly",
+      "title": "Fix the prayer-time calculation so that the displayed schedule is realistic and correctly reflects the selected Indonesia timezone (WIB/WITA/WIT) for the selected date, eliminating clearly incorrect outputs (e.g., Subuh around 09:12 or Isya around 00:03 for WIB). Update the implementation in `frontend/src/utils/prayerTimes.ts` accordingly.",
+      "reqIds": [
+        "REQ-72"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-harden-prayer-time-validation-and-error-surfacing-so-that-if-computed-prayer-times-fail-validation-invalid-format-out-of-range-or-non-chronological-ordering-the-prayer-times-card-reliably-shows-an-error-state-with-a-retry-action-instead-of-displaying-a-wrong-schedule",
+      "title": "Harden prayer-time validation and error surfacing so that if computed prayer times fail validation (invalid format, out-of-range, or non-chronological ordering), the Prayer Times card reliably shows an error state with a retry action instead of displaying a wrong schedule.",
+      "reqIds": [
+        "REQ-73"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-any-user-facing-text-that-is-newly-introduced-or-modified-while-implementing-the-prayer-time-fixes-is-in-english-do-not-mass-translate-existing-unchanged-indonesian-ui-copy",
+      "title": "Ensure any user-facing text that is newly introduced or modified while implementing the prayer-time fixes is in English (do not mass-translate existing unchanged Indonesian UI copy).",
+      "reqIds": [
+        "REQ-74"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-prayer-time-calculation-so-that-the-displayed-schedule-matches-real-indonesian-prayer-schedules-for-the-selected-timezone-wib-wita-wit-and-selected-date-eliminating-clearly-incorrect-outputs-e-g-subuh-appearing-around-09-12-or-isya-around-00-03-for-wib-update-the-implementation-in-frontend-src-utils-prayertimes-ts-accordingly",
+      "title": "Fix the prayer time calculation so that the displayed schedule matches real Indonesian prayer schedules for the selected timezone (WIB/WITA/WIT) and selected date, eliminating clearly incorrect outputs (e.g., Subuh appearing around 09:12 or Isya around 00:03 for WIB). Update the implementation in `frontend/src/utils/prayerTimes.ts` accordingly.",
+      "reqIds": [
+        "REQ-75"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-prayer-times-ui-reliably-surfaces-a-user-visible-error-state-with-a-retry-action-when-prayer-time-computation-fails-validation-and-does-not-render-an-obviously-wrong-schedule-keep-any-newly-introduced-or-modified-user-facing-text-in-the-affected-components-in-english",
+      "title": "Ensure the Prayer Times UI reliably surfaces a user-visible error state (with a Retry action) when prayer time computation fails validation, and does not render an obviously-wrong schedule. Keep any newly introduced or modified user-facing text in the affected components in English.",
+      "reqIds": [
+        "REQ-76"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -602,6 +754,20 @@
       "id": "AR-51",
       "summary": "Perbaiki tampilan progres harian, dan pindahkan fitur download laporan agar hanya ada di dashboard/halaman progress bulanan (bukan di tempat lain).",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-52",
+      "summary": "Sempurnakan tampilan/UX dashboard (halaman) progress bulanan (monthly progress page).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-56",
+      "summary": "Make the backend access-control initialization path tolerant of an empty or missing secret so it cannot cause the frontend actor initialization to hang or repeatedly fail for normal users.",
+      "reqIds": [
+        "REQ-65"
+      ],
       "status": "pending"
     }
   ],

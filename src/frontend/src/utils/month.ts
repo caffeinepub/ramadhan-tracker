@@ -24,12 +24,12 @@ export function getDaysInMonth(year: number, month: number): number {
 }
 
 /**
- * Format month label in Bahasa Indonesia
+ * Format month label in English
  */
 export function formatMonthLabel(year: number, month: number): string {
   const monthNames = [
-    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
   ];
   return `${monthNames[month]} ${year}`;
 }

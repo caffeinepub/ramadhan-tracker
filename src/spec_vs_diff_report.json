@@ -1,56 +1,47 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T06:18:45.029Z",
-  "summary": "Most requested frontend changes are implemented: prayer time calculation moved to a dedicated utility/hook with timezone persistence and rollover refresh, Dashboard UI strings in affected widgets are largely Indonesian, DailyProgressBar now uses the shared progress helper with loading/empty states, and the report download card appears to be removed from Dashboard and added to Monthly Progress. However, some REQ-53 and REQ-54 acceptance criteria cannot be confirmed from the truncated diff, and at least one unrelated utility change appears unrequested.",
+  "generatedAt": "2026-02-11T07:54:13.176Z",
+  "summary": "REQ-75 appears to be addressed by updating `frontend/src/utils/prayerTimes.ts` with a new solar-position-based calculation for WIB/WITA/WIT. Error handling/validation logic was added in `frontend/src/hooks/usePrayerTimes.ts`, but the required UI error state with a Retry action in `PrayerTimesSection.tsx` is not evidenced in the diff summary. There are also unrelated changes in `frontend/src/utils/urlParams.ts` plus additional behavior (timezone persistence/auto-refresh) not explicitly requested.",
   "missing_requirements": [
     {
-      "id": "REQ-53",
-      "requirement": "Ensure prayer times are always realistic for the selected WIB/WITA/WIT and obey ordering constraints (Fajr < Sunrise < Dhuhr < Asr < Maghrib < Isha) with no negative/invalid values rendered.",
-      "reason": "While a new calculation implementation exists and the UI adds time-format validation, the diff summary does not show any explicit enforcement/check that the computed times are strictly ordered for each timezone, nor does it clearly show clamping/wrapping logic that guarantees output is always within 00:00–23:59 and never negative in all cases (formatTime implementation is truncated).",
+      "id": "REQ-76",
+      "requirement": "Ensure `frontend/src/components/dashboard/PrayerTimesSection.tsx` shows a user-visible error state with a working Retry action when computed prayer times fail validation, and does not render an obviously-wrong schedule; new/modified user-facing text must be in English.",
+      "reason": "The diff summary shows changes to the hook (`usePrayerTimes.ts`) to produce an `error` string and a `retry()` function, but it does not show any changes to `frontend/src/components/dashboard/PrayerTimesSection.tsx` to actually render an error state and wire the Retry button in the UI.",
       "evidence": [
-        "frontend/src/utils/prayerTimes.ts (truncated: formatTime not visible)",
-        "frontend/src/components/dashboard/PrayerTimesSection.tsx (truncated: rendering behavior for invalid times not fully visible)"
-      ]
-    },
-    {
-      "id": "REQ-54",
-      "requirement": "Replace Dashboard profile setup-related English strings (e.g., “Complete Your Profile”, “Save Profile”, form placeholders) with Bahasa Indonesia equivalents.",
-      "reason": "DashboardPage was updated for the header copy, but the diff is truncated before showing the profile setup dialog’s UI strings/placeholders, so it’s not verifiable that those specific English strings were removed/replaced as required.",
-      "evidence": [
-        "frontend/src/pages/DashboardPage.tsx (truncated before dialog copy/placeholders)"
+        "frontend/src/hooks/usePrayerTimes.ts (modified)",
+        "(absence in diff summary) frontend/src/components/dashboard/PrayerTimesSection.tsx not listed as modified"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Expanded URL parameter/sessionStorage helper utilities (including hash-query parsing and session persistence).",
-      "reason": "Not requested by any requirement (REQ-53–REQ-56) and appears unrelated to prayer times, localization of specified UI areas, daily progress UI, or moving report download UI.",
+      "description": "Persisting selected prayer timezone to localStorage and restoring it on load.",
+      "reason": "BuildRequest/REQ-75/REQ-76 do not mention persisting timezone selection across sessions.",
       "evidence": [
-        "frontend/src/utils/urlParams.ts (truncated)"
+        "frontend/src/hooks/usePrayerTimes.ts"
       ]
     },
     {
-      "description": "Added a new helper getTaskCompletionCounts alongside calculateTaskCompletion.",
-      "reason": "REQ-55 only requires DailyProgressBar to use the shared progress calculation helper; adding additional exported helper functionality was not requested.",
+      "description": "Auto-refresh at date rollover (midnight) via a timer that triggers recomputation.",
+      "reason": "Not requested by REQ-75/REQ-76; requirement only mentions recomputation via Retry when validation fails.",
       "evidence": [
-        "frontend/src/utils/progress.ts"
+        "frontend/src/hooks/usePrayerTimes.ts"
+      ]
+    },
+    {
+      "description": "Unrelated URL parameter/session storage utilities modifications.",
+      "reason": "No URL parameter/session storage work is mentioned in the BuildRequest for prayer time calculation or UI error state.",
+      "evidence": [
+        "frontend/src/utils/urlParams.ts"
       ]
     }
   ],
-  "confidence": 0.64,
+  "confidence": 0.68,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/components/dashboard/DailyOverviewTiles.tsx",
-    "frontend/src/components/dashboard/DailyProgressBar.tsx",
-    "frontend/src/components/dashboard/PrayerTimesSection.tsx",
-    "frontend/src/components/dashboard/YesterdayProgressSummary.tsx",
-    "frontend/src/components/reports/DownloadCsvCard.tsx",
     "frontend/src/hooks/usePrayerTimes.ts",
-    "frontend/src/pages/DashboardPage.tsx",
-    "frontend/src/pages/MonthlyProgressPage.tsx",
     "frontend/src/utils/prayerTimes.ts",
-    "frontend/src/utils/progress.ts",
     "frontend/src/utils/urlParams.ts",
     "project_state.json"
   ]

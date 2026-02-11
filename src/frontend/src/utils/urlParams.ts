@@ -209,15 +209,14 @@ export function getSecretParameter(paramName: string): string | null {
 
 /**
  * Return-to path management for login flow
- * Stores the path a user was trying to access before being redirected to login
+ * Stores the path the user was trying to access before being redirected to login
  */
 
-const RETURN_TO_PATH_KEY = 'return_to_path';
+const RETURN_TO_PATH_KEY = 'returnToPath';
 
 /**
  * Stores the path to return to after successful login
- *
- * @param path - The path to return to
+ * @param path - The path to return to (e.g., '/admin')
  */
 export function setReturnToPath(path: string): void {
     storeSessionParameter(RETURN_TO_PATH_KEY, path);
@@ -225,7 +224,6 @@ export function setReturnToPath(path: string): void {
 
 /**
  * Retrieves the stored return-to path
- *
  * @returns The stored path if found, null otherwise
  */
 export function getReturnToPath(): string | null {

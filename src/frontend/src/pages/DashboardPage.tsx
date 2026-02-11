@@ -18,7 +18,8 @@ import { TahfidzModule } from '@/components/tracking/TahfidzModule';
 import { SedekahModule } from '@/components/tracking/SedekahModule';
 import { SholatModule } from '@/components/tracking/SholatModule';
 import { dateToTimestamp, getTodayTimestamp } from '@/utils/date';
-import { Loader2 } from 'lucide-react';
+import { Loader2, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const SELECTED_DATE_KEY = 'dashboard_selected_date';
 
@@ -35,7 +36,7 @@ export default function DashboardPage() {
     return new Date();
   });
 
-  const { data: userProfile, isLoading: profileLoading, isFetched } = useGetCallerUserProfile();
+  const { data: userProfile, isLoading: profileLoading, isFetched, error, refetch } = useGetCallerUserProfile();
   const saveProfile = useSaveCallerUserProfile();
   const [showProfileSetup, setShowProfileSetup] = useState(false);
   const [profileForm, setProfileForm] = useState({ name: '', email: '' });
@@ -61,10 +62,31 @@ export default function DashboardPage() {
     setShowProfileSetup(false);
   };
 
+  // Show loading state
   if (profileLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // Show error state with retry
+  if (error) {
+    return (
+      <div className="container max-w-2xl mx-auto px-4 py-12">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Unable to Load Profile</AlertTitle>
+          <AlertDescription className="mt-2">
+            We couldn't load your user profile. This might be a temporary connection issue.
+          </AlertDescription>
+        </Alert>
+        <div className="mt-6 flex justify-center">
+          <Button onClick={() => refetch()} variant="outline">
+            Retry
+          </Button>
+        </div>
       </div>
     );
   }

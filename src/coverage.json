@@ -1,75 +1,38 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T06:18:45.035Z",
+  "generatedAt": "2026-02-11T07:54:13.180Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 4,
+    "total": 2,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-53",
-        "summary": "Fix the prayer times calculation so displayed times are realistic and match the selected Indonesia timezone (WIB/WITA/WIT), avoiding negative/invalid values and ensuring times fall within 00:00–23:59 for the selected date.",
+        "id": "REQ-75",
+        "summary": "Fix the prayer time calculation so that the displayed schedule matches real Indonesian prayer schedules for the selected timezone (WIB/WITA/WIT) and selected date, eliminating clearly incorrect outputs (e.g., Subuh appearing around 09:12 or Isya around 00:03 for WIB). Update the implementation in `frontend/src/utils/prayerTimes.ts` accordingly.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/utils/prayerTimes.ts",
-          "frontend/src/hooks/usePrayerTimes.ts",
-          "frontend/src/components/dashboard/PrayerTimesSection.tsx"
+          "frontend/src/hooks/usePrayerTimes.ts"
         ],
         "matchedFiles": [
           "frontend/src/utils/prayerTimes.ts",
-          "frontend/src/hooks/usePrayerTimes.ts",
-          "frontend/src/components/dashboard/PrayerTimesSection.tsx"
+          "frontend/src/hooks/usePrayerTimes.ts"
         ]
       },
       {
-        "id": "REQ-54",
-        "summary": "Standardize the user-facing language to Bahasa Indonesia for the UI areas affected by this change set: Dashboard header copy, Prayer Times section labels/states, daily overview tiles, yesterday progress summary, and the report download UI.",
+        "id": "REQ-76",
+        "summary": "Ensure the Prayer Times UI reliably surfaces a user-visible error state (with a Retry action) when prayer time computation fails validation, and does not render an obviously-wrong schedule. Keep any newly introduced or modified user-facing text in the affected components in English.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx",
           "frontend/src/components/dashboard/PrayerTimesSection.tsx",
-          "frontend/src/components/dashboard/DailyOverviewTiles.tsx",
-          "frontend/src/components/dashboard/YesterdayProgressSummary.tsx",
-          "frontend/src/components/reports/DownloadCsvCard.tsx"
+          "frontend/src/hooks/usePrayerTimes.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx",
-          "frontend/src/components/dashboard/PrayerTimesSection.tsx",
-          "frontend/src/components/dashboard/DailyOverviewTiles.tsx",
-          "frontend/src/components/dashboard/YesterdayProgressSummary.tsx",
-          "frontend/src/components/reports/DownloadCsvCard.tsx"
-        ]
-      },
-      {
-        "id": "REQ-55",
-        "summary": "Improve the Daily Progress (Progres Harian) component UI and behavior so it is visually consistent, handles loading/empty states, and uses the same completion rules as the shared progress utility.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/utils/progress.ts",
-          "frontend/src/components/dashboard/DailyProgressBar.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/utils/progress.ts",
-          "frontend/src/components/dashboard/DailyProgressBar.tsx"
-        ]
-      },
-      {
-        "id": "REQ-56",
-        "summary": "Move the progress report download feature so it is available only on the Monthly Progress page, and remove it from the main Dashboard page.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx",
-          "frontend/src/pages/MonthlyProgressPage.tsx",
-          "frontend/src/components/reports/DownloadCsvCard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx",
-          "frontend/src/pages/MonthlyProgressPage.tsx",
-          "frontend/src/components/reports/DownloadCsvCard.tsx"
+          "frontend/src/hooks/usePrayerTimes.ts"
         ]
       }
     ]
@@ -79,16 +42,8 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/dashboard/DailyOverviewTiles.tsx",
-    "frontend/src/components/dashboard/DailyProgressBar.tsx",
-    "frontend/src/components/dashboard/PrayerTimesSection.tsx",
-    "frontend/src/components/dashboard/YesterdayProgressSummary.tsx",
-    "frontend/src/components/reports/DownloadCsvCard.tsx",
     "frontend/src/hooks/usePrayerTimes.ts",
-    "frontend/src/pages/DashboardPage.tsx",
-    "frontend/src/pages/MonthlyProgressPage.tsx",
     "frontend/src/utils/prayerTimes.ts",
-    "frontend/src/utils/progress.ts",
     "frontend/src/utils/urlParams.ts",
     "project_state.json",
     "scratch/component-selection.json",

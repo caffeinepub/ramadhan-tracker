@@ -1,13 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Fix unrealistic prayer time display, standardize key dashboard UI copy to Bahasa Indonesia, improve the Daily Progress component behavior/consistency, and relocate the report download feature to the Monthly Progress page.
+**Goal:** Fix Indonesian prayer time calculations so WIB/WITA/WIT schedules match real-world expectations for the selected date, and prevent obviously incorrect schedules from being shown.
 
 **Planned changes:**
-- Fix prayer time calculation/rendering so times are valid (00:00–23:59), realistic for the selected Indonesia timezone (WIB/WITA/WIT), never negative/invalid, and ordered correctly (Fajr < Sunrise < Dhuhr < Asr < Maghrib < Isha).
-- Persist and immediately apply the selected timezone (WIB/WITA/WIT) across reloads, and keep correct auto-refresh behavior when the date rolls over.
-- Localize affected UI areas to Bahasa Indonesia: Dashboard header copy, Prayer Times section labels/states, daily overview tiles, yesterday progress summary, and report download UI strings (including validation/errors/toasts).
-- Improve the Daily Progress (Progres Harian) component UI/behavior: add explicit loading state, show an empty state when no data exists for the date, ensure responsive alignment, and use the shared progress calculation helper for consistent completion logic.
-- Remove the report download UI from the Dashboard and render it only on the Monthly Progress page while preserving CSV/PDF export functionality.
+- Update `frontend/src/utils/prayerTimes.ts` to compute prayer times correctly for Indonesian timezones (WIB/WITA/WIT) for the selected date, ensuring times are valid and stay within the same day.
+- Add/adjust validation of computed prayer times (format, range, chronological order) before displaying them in the UI.
+- Update `frontend/src/components/dashboard/PrayerTimesSection.tsx` to show a user-visible error state with an English Retry action when validation fails, and recompute on Retry without a hard refresh.
 
-**User-visible outcome:** On the Dashboard, prayer times display correctly for WIB/WITA/WIT without negative/invalid times, the relevant UI text is in Bahasa Indonesia, and the Daily Progress view clearly reflects loading/empty states; report downloads (CSV/PDF) are available only from the Monthly Progress page.
+**User-visible outcome:** Prayer Times show sensible, correctly ordered schedules for WIB/WITA/WIT on the selected date; if computation fails, users see an English error state with a working Retry button instead of incorrect times.

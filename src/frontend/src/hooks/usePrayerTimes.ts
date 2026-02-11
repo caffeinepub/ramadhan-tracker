@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react';
-import { calculatePrayerTimes, type IndonesiaTimezone, type PrayerTimes } from '@/utils/prayerTimes';
+import { 
+  calculatePrayerTimes, 
+  validatePrayerTimes,
+  type IndonesiaTimezone, 
+  type PrayerTimes 
+} from '@/utils/prayerTimes';
 
 const TIMEZONE_STORAGE_KEY = 'selected_prayer_timezone';
 
@@ -25,6 +30,7 @@ export function usePrayerTimes(selectedDate: Date) {
   const retry = () => {
     setError(null);
     setIsLoading(true);
+    setPrayerTimes(null);
     setRefreshKey((prev) => prev + 1);
   };
 
@@ -32,8 +38,20 @@ export function usePrayerTimes(selectedDate: Date) {
     try {
       setIsLoading(true);
       setError(null);
+      
       const times = calculatePrayerTimes(selectedDate, timezone);
-      setPrayerTimes(times);
+      
+      // Validate the calculated times
+      const isValid = validatePrayerTimes(times);
+      
+      if (!isValid) {
+        console.error('Prayer times validation failed:', times);
+        setError('Calculation error: invalid prayer times for selected date');
+        setPrayerTimes(null);
+      } else {
+        setPrayerTimes(times);
+        setError(null);
+      }
     } catch (err) {
       console.error('Prayer times calculation error:', err);
       setError('Failed to calculate prayer times');
